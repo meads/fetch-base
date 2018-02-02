@@ -1,6 +1,6 @@
 import * as fetch from "whatwg-fetch";
 
-export interface FetchBase<T> {
+export interface IFetchBase<T> {
     get() : Promise<T[]>;
     put(item: T) : Promise<Object>;
     post(item: T) : Promise<Object>;
@@ -19,7 +19,7 @@ export class FetchConfig {
     }
 }
 
-export class FetchBase<T> implements FetchBase<T> {
+export class FetchBase<T> implements IFetchBase<T> {
     protected endpoint: string = "";
     protected cors: "cors" | "no-cors";
     private requestUri: string = "";
@@ -28,7 +28,10 @@ export class FetchBase<T> implements FetchBase<T> {
 
     get() : Promise<T[]> {
         this.requestUri = `${this.config.getUrl()}${this.endpoint}`;
-        return fetch(this.requestUri, { cors: this.cors }).then((response: Response) => {
+        return fetch(this.requestUri, { 
+            cors: this.cors,
+            method: "GET" 
+        }).then((response: Response) => {
             if(!response.ok) {
                 throw new Error(response.statusText);
             }
@@ -38,5 +41,63 @@ export class FetchBase<T> implements FetchBase<T> {
         .catch((reason: Error) => {
             return Promise.reject(reason);
         })
+    }
+    put(item: T) : Promise<Object> {
+        this.requestUri = `${this.config.getUrl()}${this.endpoint}/${item["id"]}`;
+        return fetch(this.requestUri, {
+            cors: this.cors,
+            method: "PUT"
+        })
+        .then((response: Response) => {
+            if(!response.ok) {
+                throw new Error(response.statusText);
+            }
+            return response.json();
+        })
+        .then((json: JSON) => {
+            return json;
+        })
+        .catch((reason: Error) => {
+            return Promise.reject(reason);
+        });
+    }
+    post(item: T) : Promise<Object> {
+        this.requestUri = `${this.config.getUrl()}${this.endpoint}/0`;
+        return fetch(this.requestUri, {
+            cors: this.cors,
+            method: "POST",
+            body: JSON.stringify(item)
+        })
+        .then((response: Response) => {
+            if(!response.ok) {
+                throw new Error(response.statusText);
+            }
+            return response.json();
+        })
+        .then((json: JSON) => {
+            return json;
+        })
+        .catch((reason: Error) => {
+            return Promise.reject(reason);
+        });
+    }
+    delete(item: T) : Promise<boolean> {
+        this.requestUri = `${this.config.getUrl()}${this.endpoint}/${item["id"]}`;
+        return fetch(this.requestUri, {
+            cors: this.cors,
+            method: "DELETE"
+        })
+        .then((response: Response) => {
+            if(!response.ok) {
+                throw new Error(response.statusText);
+            }
+            return response.json();
+        })
+        .then((json: JSON) => {
+            return json;
+        })
+        .catch((reason: Error) => {
+            return Promise.reject(reason);
+        });
     }
 }

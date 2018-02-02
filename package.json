@@ -2,7 +2,7 @@
   "name": "fetch-base",
   "version": "1.0.0",
   "description": "A base class for fetch requests.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
@@ -13,7 +13,6 @@
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
-    "@types/whatwg-fetch": "0.0.33",
     "typescript": "^2.7.1"
   }
 }
