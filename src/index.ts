@@ -15,7 +15,8 @@ export class FetchConfig {
         public protocol: "http" | "https",
     ){}
     getUrl(): string {
-        return `${this.protocol}://${this.api}/${this.version}/`;
+        // https://some.com/some/api/v1
+        return `${this.protocol}://${this.ip}/${this.api}/${this.version}/`;
     }
 }
 
@@ -101,3 +102,17 @@ export class FetchBase<T> implements IFetchBase<T> {
         });
     }
 }
+
+// class Person {
+//     firstName: string;
+//     lastName: string;
+//     age: number;
+// }
+// interface IPeopleService extends IFetchBase<Person> {}
+// class PeopleService extends FetchBase<Person> implements IPeopleService {
+//     constructor(config: FetchConfig) {
+//         super(config)
+//     }
+// }
+
+// new PeopleService().get().then(value => value.forEach(p => p.lastName, p.firstName, p.age))
