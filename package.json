@@ -1,15 +1,27 @@
 {
   "name": "fetch-base",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A base class for fetch requests.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meads/fetch-base.git"
+  },
+  "keywords": [
+    "fetch",
+    "api"
+  ],
+  "author": "Mike Eads",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/meads/fetch-base/issues"
+  },
+  "homepage": "https://github.com/meads/fetch-base#readme",
   "scripts": {
     "test": "jest",
     "build": "tsc"
   },
-  "author": "Mike Eads",
-  "license": "ISC",
   "dependencies": {
     "whatwg-fetch": "^2.0.3"
   },
