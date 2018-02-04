@@ -14,10 +14,10 @@ class Cat {
 }
 
 // extend the generic interface supplying your data class
-interface IFetchBaseTestDouble<Cat> extends IFetchBase<Cat> {}
+interface IFetchBaseTestDouble extends IFetchBase<Cat> {}
 
 // extend and implement the generic class and interface respectively
-class FetchBaseTestDouble extends FetchBase<Cat> implements IFetchBaseTestDouble<Cat> {
+class FetchBaseTestDouble extends FetchBase<Cat> implements IFetchBaseTestDouble {
     constructor(config: IFetchConfig) {
         super(config);
         this.endpoint = "resource"; // declare the endpoint for this resource "cat"
