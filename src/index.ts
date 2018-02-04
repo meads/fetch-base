@@ -1,41 +1,73 @@
 import * as fetch from "whatwg-fetch";
 
-export interface IFetchBase<T> {
-    get() : Promise<T[]>;
-    put(item: T) : Promise<Object>;
-    post(item: T) : Promise<Object>;
-    delete(item: T) : Promise<boolean>;
+export interface IIdentifyable {
+    id: string | number;
 }
 
-export class FetchConfig {
-    constructor(
-        public ip: string,
-        public api: string,
-        public version: string,
-        public protocol: "http" | "https",
-    ){}
-    getUrl(): string {
-        // https://some.com/some/api/v1
-        return `${this.protocol}://${this.ip}/${this.api}/${this.version}/`;
-    }
+export interface IFetchBase<IIdentifyable> {
+    get() : Promise<IIdentifyable[]>;
+    put(item: IIdentifyable) : Promise<Object>;
+    post(item: IIdentifyable) : Promise<Object>;
+    delete(item: IIdentifyable) : Promise<boolean>;
+}
+
+export interface IFetchConfig {
+    ip: string;
+    api: string;
+    protocol: "http" | "https";
 }
 
 export class FetchBase<T> implements IFetchBase<T> {
+    
     protected endpoint: string = "";
-    protected cors: "cors" | "no-cors";
-    private requestUri: string = "";
 
-    constructor(private config: FetchConfig){}
+    private isIdentifyable(arg: any): arg is IIdentifyable {
+        return (arg as IIdentifyable).id !== undefined;
+    }
+ 
+    /**
+     * 
+     * @param params A list of name=value strings comma separated as parameters. The query params 
+     *               will be joined with the correct ? and & symbols.
+     */
+    public getUrl(resourceId: string = "", queryParams: any[] = []): string {
+        if(!this.config.protocol || !this.config.ip) {
+            throw new Error("\"protocol\" and \"ip\" props are required for fetch-base");
+        }
+
+        // https://some.com/some/api/v1/resource?param1=value1&param2=value2
+        let url = `${this.config.protocol}://${this.config.ip}`;
+        url += this.config.api ? `/${this.config.api}` : "";
+        url += this.endpoint ? `/${this.endpoint}` : "";
+        url += resourceId ? `/${resourceId}` : "";
+        if(queryParams && queryParams.length > 0) {
+            url = `${url}?${queryParams.shift()}`;
+            if(queryParams.length > 0) {
+                url += queryParams.map(p => `&${p}`).join(""); 
+            }
+        }
+        return url;
+    }
+    protected getOptions(): RequestInit {
+        return { method: "GET" }
+    }
+    protected putOptions(item: T): RequestInit {
+        return { method: "PUT", body: JSON.stringify(item) }
+    }
+    protected postOptions(item: T): RequestInit {
+        return { method: "POST", body: JSON.stringify(item) }
+    }
+    protected deleteOptions(): RequestInit {
+        return { method: "DELETE" }
+    }
+
+    constructor(private config: IFetchConfig){}
 
     get() : Promise<T[]> {
-        this.requestUri = `${this.config.getUrl()}${this.endpoint}`;
-        return fetch(this.requestUri, { 
-            cors: this.cors,
-            method: "GET" 
-        }).then((response: Response) => {
+        return fetch(this.getUrl(), this.getOptions()).then((response: Response) => {
             if(!response.ok) {
                 throw new Error(response.statusText);
-            }
+            }   
             return response.json();
         })
         .then((json: JSON) => { return json })
@@ -44,18 +76,15 @@ export class FetchBase<T> implements IFetchBase<T> {
         })
     }
     put(item: T) : Promise<Object> {
-        this.requestUri = `${this.config.getUrl()}${this.endpoint}/${item["id"]}`;
-        return fetch(this.requestUri, {
-            cors: this.cors,
-            method: "PUT"
-        })
+        let id = this.isIdentifyable(item) ? `${item.id}` : "";
+        return fetch(this.getUrl(id), this.putOptions(item))
         .then((response: Response) => {
             if(!response.ok) {
                 throw new Error(response.statusText);
             }
             return response.json();
         })
-        .then((json: JSON) => {
+        .then(json => {
             return json;
         })
         .catch((reason: Error) => {
@@ -63,12 +92,8 @@ export class FetchBase<T> implements IFetchBase<T> {
         });
     }
     post(item: T) : Promise<Object> {
-        this.requestUri = `${this.config.getUrl()}${this.endpoint}/0`;
-        return fetch(this.requestUri, {
-            cors: this.cors,
-            method: "POST",
-            body: JSON.stringify(item)
-        })
+        let id = this.isIdentifyable(item) ? `${item.id}` : "";        
+        return fetch(this.getUrl(id), this.postOptions(item))
         .then((response: Response) => {
             if(!response.ok) {
                 throw new Error(response.statusText);
@@ -83,11 +108,8 @@ export class FetchBase<T> implements IFetchBase<T> {
         });
     }
     delete(item: T) : Promise<boolean> {
-        this.requestUri = `${this.config.getUrl()}${this.endpoint}/${item["id"]}`;
-        return fetch(this.requestUri, {
-            cors: this.cors,
-            method: "DELETE"
-        })
+        let id = this.isIdentifyable(item) ? `${item.id}` : "";        
+        return fetch(this.getUrl(id), this.deleteOptions)
         .then((response: Response) => {
             if(!response.ok) {
                 throw new Error(response.statusText);
