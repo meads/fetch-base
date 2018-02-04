@@ -1,7 +1,7 @@
-import * as fetch from "whatwg-fetch";
+import "whatwg-fetch";
 
 export interface IIdentifyable {
-    id: string | number;
+    [id: string]: string | number;
 }
 
 export interface IFetchBase<T> {
@@ -33,7 +33,12 @@ export class FetchBase<T> implements IFetchBase<T> {
     put(item: T) : Promise<Object> {
         let id = this.isIdentifyable(item) ? `${item.id}` : "";
         return fetch(this.getUrl(id), this.putOptions(item))
-        .then(this.handleFetchResponse)
+        .then((response: Response) => {
+            if(!response.ok) {
+                throw new Error(response.statusText);
+            }
+            return response.json();
+        })
         .then(this.jsonResponse)
         .catch(this.rejectErrorPromise);
     }
@@ -46,7 +51,7 @@ export class FetchBase<T> implements IFetchBase<T> {
     }
     delete(item: T) : Promise<boolean> {
         let id = this.isIdentifyable(item) ? `${item.id}` : "";        
-        return fetch(this.getUrl(id), this.deleteOptions)
+        return fetch(this.getUrl(id), this.deleteOptions())
         .then(this.handleFetchResponse)
         .then(this.jsonResponse)
         .catch(this.rejectErrorPromise);
@@ -57,8 +62,8 @@ export class FetchBase<T> implements IFetchBase<T> {
         return Promise.reject(reason);
     }
 
-    protected jsonResponse(json: JSON) {
-        return json;
+    protected jsonResponse(json) {
+        return Promise.resolve(json);
     }
 
     protected handleFetchResponse(response: Response) {
