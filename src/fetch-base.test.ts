@@ -7,9 +7,9 @@ class Cat {
     agility: number;
 }
 
-interface IFetchBaseTestDouble<Cat> extends IFetchBase<Cat> {}
+interface IFetchBaseTestDouble extends IFetchBase<Cat> {}
 
-class FetchBaseTestDouble extends FetchBase<Cat> implements IFetchBaseTestDouble<Cat> {
+class FetchBaseTestDouble extends FetchBase<Cat> implements IFetchBaseTestDouble {
     constructor(config: IFetchConfig) {
         super(config);
         this.endpoint = "resource";
