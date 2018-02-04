@@ -9,6 +9,7 @@ export interface IFetchBase<T> {
     put(item: T) : Promise<Object>;
     post(item: T) : Promise<Object>;
     delete(item: T) : Promise<boolean>;
+    findAll<TResult>(suffix: string): Promise<TResult[]>;
 }
 
 export interface IFetchConfig {
@@ -23,7 +24,19 @@ export class FetchBase<T> implements IFetchBase<T> {
     
     constructor(private config: IFetchConfig){}
     
-
+    // https://test.com/resource/id/suffix
+    findAll<TResult>(suffix?: string) : Promise<TResult[]> {
+        return fetch(`${this.getUrl()}${suffix}`, this.getOptions())
+        .then(this.handleFetchResponse)
+        .then(this.jsonResponse)
+        .catch(this.rejectErrorPromise)
+    }
+    single(id: string|number) : Promise<T> {
+        return fetch(this.getUrl(id.toString()), this.getOptions())
+        .then(this.handleFetchResponse)
+        .then(this.jsonResponse)
+        .catch(this.rejectErrorPromise)
+    }
     get() : Promise<T[]> {
         return fetch(this.getUrl(), this.getOptions())
         .then(this.handleFetchResponse)
