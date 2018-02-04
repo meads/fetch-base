@@ -4,11 +4,11 @@ export interface IIdentifyable {
     id: string | number;
 }
 
-export interface IFetchBase<IIdentifyable> {
-    get() : Promise<IIdentifyable[]>;
-    put(item: IIdentifyable) : Promise<Object>;
-    post(item: IIdentifyable) : Promise<Object>;
-    delete(item: IIdentifyable) : Promise<boolean>;
+export interface IFetchBase<T> {
+    get() : Promise<T[]>;
+    put(item: T) : Promise<Object>;
+    post(item: T) : Promise<Object>;
+    delete(item: T) : Promise<boolean>;
 }
 
 export interface IFetchConfig {
@@ -20,10 +20,58 @@ export interface IFetchConfig {
 export class FetchBase<T> implements IFetchBase<T> {
     
     protected endpoint: string = "";
+    
+    constructor(private config: IFetchConfig){}
+    
+
+    get() : Promise<T[]> {
+        return fetch(this.getUrl(), this.getOptions())
+        .then(this.handleFetchResponse)
+        .then(this.jsonResponse)
+        .catch(this.rejectErrorPromise)
+    }
+    put(item: T) : Promise<Object> {
+        let id = this.isIdentifyable(item) ? `${item.id}` : "";
+        return fetch(this.getUrl(id), this.putOptions(item))
+        .then(this.handleFetchResponse)
+        .then(this.jsonResponse)
+        .catch(this.rejectErrorPromise);
+    }
+    post(item: T) : Promise<Object> {
+        let id = this.isIdentifyable(item) ? `${item.id}` : "";        
+        return fetch(this.getUrl(id), this.postOptions(item))
+        .then(this.handleFetchResponse)
+        .then(this.jsonResponse)
+        .catch(this.rejectErrorPromise);
+    }
+    delete(item: T) : Promise<boolean> {
+        let id = this.isIdentifyable(item) ? `${item.id}` : "";        
+        return fetch(this.getUrl(id), this.deleteOptions)
+        .then(this.handleFetchResponse)
+        .then(this.jsonResponse)
+        .catch(this.rejectErrorPromise);
+    }
+
+
+    protected rejectErrorPromise(reason: Error) {
+        return Promise.reject(reason);
+    }
+
+    protected jsonResponse(json: JSON) {
+        return json;
+    }
+
+    protected handleFetchResponse(response: Response) {
+        if(!response.ok) {
+            throw new Error(response.statusText);
+        }
+        return response.json();
+    }
 
     private isIdentifyable(arg: any): arg is IIdentifyable {
         return (arg as IIdentifyable).id !== undefined;
     }
+
  
     /**
      * 
@@ -61,80 +109,4 @@ export class FetchBase<T> implements IFetchBase<T> {
         return { method: "DELETE" }
     }
 
-    constructor(private config: IFetchConfig){}
-
-    get() : Promise<T[]> {
-        return fetch(this.getUrl(), this.getOptions()).then((response: Response) => {
-            if(!response.ok) {
-                throw new Error(response.statusText);
-            }   
-            return response.json();
-        })
-        .then((json: JSON) => { return json })
-        .catch((reason: Error) => {
-            return Promise.reject(reason);
-        })
-    }
-    put(item: T) : Promise<Object> {
-        let id = this.isIdentifyable(item) ? `${item.id}` : "";
-        return fetch(this.getUrl(id), this.putOptions(item))
-        .then((response: Response) => {
-            if(!response.ok) {
-                throw new Error(response.statusText);
-            }
-            return response.json();
-        })
-        .then(json => {
-            return json;
-        })
-        .catch((reason: Error) => {
-            return Promise.reject(reason);
-        });
-    }
-    post(item: T) : Promise<Object> {
-        let id = this.isIdentifyable(item) ? `${item.id}` : "";        
-        return fetch(this.getUrl(id), this.postOptions(item))
-        .then((response: Response) => {
-            if(!response.ok) {
-                throw new Error(response.statusText);
-            }
-            return response.json();
-        })
-        .then((json: JSON) => {
-            return json;
-        })
-        .catch((reason: Error) => {
-            return Promise.reject(reason);
-        });
-    }
-    delete(item: T) : Promise<boolean> {
-        let id = this.isIdentifyable(item) ? `${item.id}` : "";        
-        return fetch(this.getUrl(id), this.deleteOptions)
-        .then((response: Response) => {
-            if(!response.ok) {
-                throw new Error(response.statusText);
-            }
-            return response.json();
-        })
-        .then((json: JSON) => {
-            return json;
-        })
-        .catch((reason: Error) => {
-            return Promise.reject(reason);
-        });
-    }
 }
-
-// class Person {
-//     firstName: string;
-//     lastName: string;
-//     age: number;
-// }
-// interface IPeopleService extends IFetchBase<Person> {}
-// class PeopleService extends FetchBase<Person> implements IPeopleService {
-//     constructor(config: FetchConfig) {
-//         super(config)
-//     }
-// }
-
-// new PeopleService().get().then(value => value.forEach(p => p.lastName, p.firstName, p.age))
