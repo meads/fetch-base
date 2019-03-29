@@ -18,8 +18,11 @@
     "url": "https://github.com/meads/fetch-base/issues"
   },
   "homepage": "https://github.com/meads/fetch-base#readme",
+  "jest": {
+    "testURL": "http://localhost/"
+  },
   "scripts": {
-    "test": "jest",
+    "test": "jest ",
     "build": "tsc"
   },
   "dependencies": {
