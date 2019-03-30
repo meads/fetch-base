@@ -8,6 +8,8 @@ fetch-base-test repo with implementation example
 https://github.com/meads/fetch-base-test
 
 
+[![Build Status](https://travis-ci.com/meads/fetch-base.svg?branch=master)](https://travis-ci.com/meads/fetch-base)
+
 # send me some beer money 🍺
 https://mikeads.com/ 
 
