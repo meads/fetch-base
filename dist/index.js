@@ -75,7 +75,7 @@ var FetchBase = /** @class */ (function () {
         if (resourceId === void 0) { resourceId = ""; }
         if (queryParams === void 0) { queryParams = []; }
         if (!this.config.protocol || !this.config.ip) {
-            throw new Error("\"protocol\" and \"ip\" props are required for fetch-base");
+            throw new Error("'protocol' and 'ip' props are required for fetch-base");
         }
         // https://some.com/some/api/v1/resource?param1=value1&param2=value2
         var url = this.config.protocol + "://" + this.config.ip;

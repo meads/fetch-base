@@ -96,9 +96,9 @@ export class FetchBase<T> implements IFetchBase<T> {
      * @param params A list of name=value strings comma separated as parameters. The query params 
      *               will be joined with the correct ? and & symbols.
      */
-    public getUrl(resourceId: string = "", queryParams: any[] = []): string {
+    public getUrl(resourceId: string = "", queryParams: any[] = []): string | never {
         if(!this.config.protocol || !this.config.ip) {
-            throw new Error("\"protocol\" and \"ip\" props are required for fetch-base");
+            throw new Error("'protocol' and 'ip' props are required for fetch-base");
         }
 
         // https://some.com/some/api/v1/resource?param1=value1&param2=value2

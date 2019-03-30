@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1553975669743" clover="3.2.0">
-  <project timestamp="1553975669744" name="All files">
-    <metrics statements="57" coveredstatements="56" conditionals="30" coveredconditionals="25" methods="19" coveredmethods="19" elements="106" coveredelements="100" complexity="0" loc="57" ncloc="57" packages="1" files="1" classes="1">
+<coverage generated="1553981358158" clover="3.2.0">
+  <project timestamp="1553981358158" name="All files">
+    <metrics statements="57" coveredstatements="57" conditionals="30" coveredconditionals="26" methods="19" coveredmethods="19" elements="106" coveredelements="102" complexity="0" loc="57" ncloc="57" packages="1" files="1" classes="1">
       <file name="index.js" path="/home/meads/DEV/fetch-base/dist/index.js">
-        <metrics statements="57" coveredstatements="56" conditionals="30" coveredconditionals="25" methods="19" coveredmethods="19"/>
+        <metrics statements="57" coveredstatements="57" conditionals="30" coveredconditionals="26" methods="19" coveredmethods="19"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -40,8 +40,8 @@
         <line num="74" count="1" type="stmt"/>
         <line num="75" count="32" type="cond" truecount="2" falsecount="0"/>
         <line num="76" count="32" type="cond" truecount="2" falsecount="0"/>
-        <line num="77" count="32" type="cond" truecount="3" falsecount="1"/>
-        <line num="78" count="0" type="stmt"/>
+        <line num="77" count="32" type="cond" truecount="4" falsecount="0"/>
+        <line num="78" count="1" type="stmt"/>
         <line num="81" count="31" type="stmt"/>
         <line num="82" count="31" type="cond" truecount="2" falsecount="0"/>
         <line num="83" count="31" type="cond" truecount="1" falsecount="1"/>

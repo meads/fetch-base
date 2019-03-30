@@ -604,6 +604,6 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
 test('FetchBase getUrl should return throw an Exception given a config with no ip or no protocol', function () {
     var config = {};
     var catService = new FetchBaseTestDouble(config);
-    expect(catService.getUrl).toThrow();
+    expect(function () { return catService.getUrl(); }).toThrow("'protocol' and 'ip' props are required for fetch-base");
 });
 //# sourceMappingURL=fetch-base.test.js.map

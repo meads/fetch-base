@@ -33,7 +33,7 @@ export declare class FetchBase<T> implements IFetchBase<T> {
      * @param params A list of name=value strings comma separated as parameters. The query params
      *               will be joined with the correct ? and & symbols.
      */
-    getUrl(resourceId?: string, queryParams?: any[]): string;
+    getUrl(resourceId?: string, queryParams?: any[]): string | never;
     protected getOptions(): RequestInit;
     protected putOptions(item: T): RequestInit;
     protected postOptions(item: T): RequestInit;
