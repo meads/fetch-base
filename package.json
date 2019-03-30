@@ -25,7 +25,7 @@
   },
   "scripts": {
     "test-local": "jest",
-    "test": "jest --collect-coverage --ci",
+    "test": "jest --collectCoverage --ci",
     "build": "tsc",
     "help": "jest -h"
   },
