@@ -26,8 +26,7 @@ var FetchBase = /** @class */ (function () {
             .catch(this.rejectErrorPromise);
     };
     FetchBase.prototype.put = function (item) {
-        var id = this.isIdentifyable(item) ? "" + item.id : "";
-        return fetch(this.getUrl(id), this.putOptions(item))
+        return fetch(this.getUrl(item["id"]), this.putOptions(item))
             .then(function (response) {
             if (!response.ok) {
                 throw new Error(response.statusText);
@@ -38,15 +37,13 @@ var FetchBase = /** @class */ (function () {
             .catch(this.rejectErrorPromise);
     };
     FetchBase.prototype.post = function (item) {
-        var id = this.isIdentifyable(item) ? "" + item.id : "";
-        return fetch(this.getUrl(id), this.postOptions(item))
+        return fetch(this.getUrl(item["id"]), this.postOptions(item))
             .then(this.handleFetchResponse)
             .then(this.jsonResponse)
             .catch(this.rejectErrorPromise);
     };
     FetchBase.prototype.delete = function (item) {
-        var id = this.isIdentifyable(item) ? "" + item.id : "";
-        return fetch(this.getUrl(id), this.deleteOptions())
+        return fetch(this.getUrl(item["id"]), this.deleteOptions())
             .then(this.handleFetchResponse)
             .then(this.jsonResponse)
             .catch(this.rejectErrorPromise);
@@ -62,9 +59,6 @@ var FetchBase = /** @class */ (function () {
             throw new Error(response.statusText);
         }
         return response.json();
-    };
-    FetchBase.prototype.isIdentifyable = function (arg) {
-        return arg.id !== undefined;
     };
     /**
      *

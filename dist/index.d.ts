@@ -27,7 +27,6 @@ export declare class FetchBase<T> implements IFetchBase<T> {
     protected rejectErrorPromise(reason: Error): Promise<never>;
     protected jsonResponse(json: any): Promise<any>;
     protected handleFetchResponse(response: Response): Promise<any>;
-    private isIdentifyable(arg);
     /**
      *
      * @param params A list of name=value strings comma separated as parameters. The query params

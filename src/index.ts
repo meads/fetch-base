@@ -43,9 +43,8 @@ export class FetchBase<T> implements IFetchBase<T> {
         .then(this.jsonResponse)
         .catch(this.rejectErrorPromise)
     }
-    put(item: T) : Promise<Object> {
-        let id = this.isIdentifyable(item) ? `${item.id}` : "";
-        return fetch(this.getUrl(id), this.putOptions(item))
+    put(item: T) : Promise<Object> {        
+        return fetch(this.getUrl(item["id"]), this.putOptions(item))
         .then((response: Response) => {
             if(!response.ok) {
                 throw new Error(response.statusText);
@@ -55,16 +54,14 @@ export class FetchBase<T> implements IFetchBase<T> {
         .then(this.jsonResponse)
         .catch(this.rejectErrorPromise);
     }
-    post(item: T) : Promise<Object> {
-        let id = this.isIdentifyable(item) ? `${item.id}` : "";        
-        return fetch(this.getUrl(id), this.postOptions(item))
+    post(item: T) : Promise<Object> {        
+        return fetch(this.getUrl(item["id"]), this.postOptions(item))
         .then(this.handleFetchResponse)
         .then(this.jsonResponse)
         .catch(this.rejectErrorPromise);
     }
-    delete(item: T) : Promise<boolean> {
-        let id = this.isIdentifyable(item) ? `${item.id}` : "";        
-        return fetch(this.getUrl(id), this.deleteOptions())
+    delete(item: T) : Promise<boolean> {        
+        return fetch(this.getUrl(item["id"]), this.deleteOptions())
         .then(this.handleFetchResponse)
         .then(this.jsonResponse)
         .catch(this.rejectErrorPromise);
@@ -85,11 +82,6 @@ export class FetchBase<T> implements IFetchBase<T> {
         }
         return response.json();
     }
-
-    private isIdentifyable(arg: any): arg is IIdentifyable {
-        return (arg as IIdentifyable).id !== undefined;
-    }
-
  
     /**
      * 
