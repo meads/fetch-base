@@ -23,7 +23,8 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "tsc"
+    "build": "tsc",
+    "help": "jest -h"
   },
   "dependencies": {
     "whatwg-fetch": "^2.0.3"
