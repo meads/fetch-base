@@ -9,7 +9,7 @@ https://github.com/meads/fetch-base-test
 
 
 [![Build Status](https://travis-ci.com/meads/fetch-base.svg?branch=master)](https://travis-ci.com/meads/fetch-base)
-[![codecov](https://codecov.io/gh/meads/fetch-base/src/branch/master/graph/badge.svg)](https://codecov.io/gh/meads/fetch-base/src)
+[![codecov](https://codecov.io/gh/meads/fetch-base/branch/master/graph/badge.svg?sanitize=true)](https://codecov.io/gh/meads/fetch-base)
 
 # send me some beer money 🍺
 https://mikeads.com/ 
