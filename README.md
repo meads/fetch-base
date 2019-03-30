@@ -1,41 +1,44 @@
 # fetch-base
-A base class for fetch requests.
+A base class for [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) requests.
+
+npm package source code (but really just import the npm package or submit a pull request for change in the repo!)
+https://github.com/meads/fetch-base
+
+fetch-base-test repo with implementation example
+https://github.com/meads/fetch-base-test
+
+
+# send me some beer money 🍺
+https://mikeads.com/ 
+
 
 ```ts
-// include the library module classes and interfaces
-import { FetchBase, IFetchConfig, IFetchBase } from "fetch-base";
+import { FetchBase, IFetchBase }  from "fetch-base"
 
-// declare your data that the service knows to work with
-class Cat {
-    meow: "quiet" | "medium" | "loud" | "disgruntled";
-    age: number;
-    name: string;
-    agility: number;
+export class Plant {
+    constructor(
+        public commonName: string = "",
+        public genus: string = "",
+        public species: string = "",
+    ){}
 }
 
-// extend the generic interface supplying your data class
-interface IFetchBaseTestDouble extends IFetchBase<Cat> {}
-
-// extend and implement the generic class and interface respectively
-class FetchBaseTestDouble extends FetchBase<Cat> implements IFetchBaseTestDouble {
-    constructor(config: IFetchConfig) {
-        super(config);
-        this.endpoint = "resource"; // declare the endpoint for this resource "cat"
+interface IPlantService extends IFetchBase<Plant> {}
+class PlantService extends FetchBase<Plant> implements IPlantService {
+    constructor() {
+        super({
+            ip: "localhost:8080",
+            api: "api",
+            protocol: "http",
+        })
     }
-    // override the super class with your own implementation of FetchBase methods here...
-    // ...
 }
 
-// declare a config object used during fetch requests
-let config = <IFetchConfig>{
-    ip: "some.com",
-    protocol: "https",
-    api: "some/api/v1"    
-};
+let plantService = new PlantService()
 
-// invoke the get request directly and get JavaScript Object results.
-new FetchBaseTestDouble(config).get().then(result => {
-    // result is already JSON.parsed for you too.
-});
+plantService.get().then((plants: Plant[]) => {
+    console.log(plants)
+    alert("view the console for results!")
+}).catch(reason => alert(reason))
 
 ```
