@@ -24,7 +24,8 @@
     "collectCoverage": true
   },
   "scripts": {
-    "test": "jest && codecov -t 0958fb9c-6546-4f61-9001-45de41dbad4b",
+    "test-local": "jest",
+    "test": "jest --collect-coverage --ci",
     "build": "tsc",
     "help": "jest -h"
   },
