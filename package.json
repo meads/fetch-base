@@ -19,10 +19,12 @@
   },
   "homepage": "https://github.com/meads/fetch-base#readme",
   "jest": {
-    "testURL": "http://localhost/"
+    "testURL": "http://localhost/",
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest && codecov",
     "build": "tsc",
     "help": "jest -h"
   },
