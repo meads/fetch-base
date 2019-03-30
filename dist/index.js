@@ -75,7 +75,12 @@ var FetchBase = /** @class */ (function () {
         var url = this.config.protocol + "://" + this.config.ip;
         url += this.config.api ? "/" + this.config.api : "";
         url += this.endpoint ? "/" + this.endpoint : "";
-        url += resourceId ? "/" + resourceId : "";
+        if (resourceId == "undefined" || resourceId == "null") {
+            throw new Error("objects of type T that fetch-base operates on need a unique identifier named 'id'");
+        }
+        if (resourceId) {
+            url += "/" + resourceId;
+        }
         if (queryParams && queryParams.length > 0) {
             url = url + "?" + queryParams.shift();
             if (queryParams.length > 0) {

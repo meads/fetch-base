@@ -25,6 +25,13 @@ var FetchBaseTestDouble = /** @class */ (function (_super) {
     }
     return FetchBaseTestDouble;
 }(index_1.FetchBase));
+var FetchBaseTestDoubleNoEndpoint = /** @class */ (function (_super) {
+    __extends(FetchBaseTestDoubleNoEndpoint, _super);
+    function FetchBaseTestDoubleNoEndpoint(config) {
+        return _super.call(this, config) || this;
+    }
+    return FetchBaseTestDoubleNoEndpoint;
+}(index_1.FetchBase));
 var mockResponse = function (status, statusText, body) {
     return Promise.resolve({
         status: status,
@@ -571,7 +578,7 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
     var catService = new FetchBaseTestDouble(config);
     expect(catService.getUrl("", ["param=value", "param2=value2"])).toBe(expected);
 });
-test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, no resource id and one param', function () {
+test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, undefined resource id and one param', function () {
     var expected = "http://localhost/some/api/v1/resource?param=value";
     var config = {
         ip: "localhost",
@@ -581,6 +588,16 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
     var catService = new FetchBaseTestDouble(config);
     expect(catService.getUrl("", ["param=value"])).toBe(expected);
 });
+test('FetchBase getUrl should throw an error given the resourceId is "undefined" or "null" string', function () {
+    var expected = "objects of type T that fetch-base operates on need a unique identifier named 'id'";
+    var config = {
+        ip: "localhost",
+        protocol: "http",
+        api: "some/api/v1"
+    };
+    var catService = new FetchBaseTestDouble(config);
+    expect(function () { return catService.getUrl("undefined", ["param=value"]); }).toThrow(expected);
+});
 test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, no resource id and no params', function () {
     var expected = "http://localhost/some/api/v1/resource";
     var config = {
@@ -589,7 +606,7 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
         api: "some/api/v1"
     };
     var catService = new FetchBaseTestDouble(config);
-    expect(catService.getUrl("", [])).toBe(expected);
+    expect(catService.getUrl()).toBe(expected);
 });
 test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, no api, no resource id and no params', function () {
     var expected = "http://localhost/resource";
@@ -599,7 +616,18 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
         api: ""
     };
     var catService = new FetchBaseTestDouble(config);
-    expect(catService.getUrl("", [])).toBe(expected);
+    expect(catService.getUrl()).toBe(expected);
+});
+// endpoint
+test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, no [endpoint, api, id, params]', function () {
+    var expected = "http://localhost";
+    var config = {
+        ip: "localhost",
+        protocol: "http",
+        api: ""
+    };
+    var catService = new FetchBaseTestDoubleNoEndpoint(config);
+    expect(catService.getUrl()).toBe(expected);
 });
 test('FetchBase getUrl should return throw an Exception given a config with no ip or no protocol', function () {
     var config = {};

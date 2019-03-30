@@ -16,6 +16,11 @@ class FetchBaseTestDouble extends FetchBase<Cat> implements IFetchBaseTestDouble
     }
 }
 
+class FetchBaseTestDoubleNoEndpoint extends FetchBase<Cat> implements IFetchBaseTestDouble {
+    constructor(config: IFetchConfig) {
+        super(config);
+    }
+}
 
 const mockResponse = (status, statusText, body) => {
     return Promise.resolve({
@@ -656,7 +661,7 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
     expect(catService.getUrl("", ["param=value", "param2=value2"])).toBe(expected);
 });
 
-test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, no resource id and one param', () => {
+test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, undefined resource id and one param', () => {
     const expected = "http://localhost/some/api/v1/resource?param=value";
     let config = <IFetchConfig>{
         ip: "localhost",
@@ -667,6 +672,17 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
     expect(catService.getUrl("", ["param=value"])).toBe(expected);
 });
 
+test('FetchBase getUrl should throw an error given the resourceId is "undefined" or "null" string', () => {
+    const expected = "objects of type T that fetch-base operates on need a unique identifier named 'id'"
+    let config = <IFetchConfig>{
+        ip: "localhost",
+        protocol: "http",
+        api: "some/api/v1"    
+    };
+    const catService = new FetchBaseTestDouble(config);
+    expect(() => catService.getUrl("undefined", ["param=value"])).toThrow(expected);
+})
+
 test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, no resource id and no params', () => {
     const expected = "http://localhost/some/api/v1/resource";
     let config = <IFetchConfig>{
@@ -675,7 +691,7 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
         api: "some/api/v1"    
     };
     const catService = new FetchBaseTestDouble(config);
-    expect(catService.getUrl("", [])).toBe(expected);
+    expect(catService.getUrl()).toBe(expected);
 });
 
 test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, no api, no resource id and no params', () => {
@@ -686,8 +702,23 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
         api: ""
     };
     const catService = new FetchBaseTestDouble(config);
-    expect(catService.getUrl("", [])).toBe(expected);
+    expect(catService.getUrl()).toBe(expected);
 });
+
+// endpoint
+test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, no [endpoint, api, id, params]', () => {
+
+    const expected = "http://localhost";
+    let config = <IFetchConfig>{
+        ip: "localhost",
+        protocol: "http",
+        api: ""
+    };
+    let catService = new FetchBaseTestDoubleNoEndpoint(config);
+    
+    expect(catService.getUrl()).toBe(expected);
+});
+
 
 test('FetchBase getUrl should return throw an Exception given a config with no ip or no protocol', () => {
     let config = <IFetchConfig>{};
