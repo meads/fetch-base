@@ -24,8 +24,8 @@
     "collectCoverage": true
   },
   "scripts": {
-    "test-local": "jest",
-    "test": "jest --collectCoverage --ci",
+    "test-local": "jest dist/fetch-base.test.js",
+    "test": "jest --collectCoverage --ci dist/fetch-base.test.js",
     "build": "tsc",
     "help": "jest -h"
   },
@@ -33,9 +33,9 @@
     "whatwg-fetch": "3.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^22.1.1",
+    "@types/jest": "^22.2.3",
     "codecov": "^3.2.0",
-    "jest": "^22.1.4",
-    "typescript": "^2.7.1"
+    "jest": "^24.6.0",
+    "typescript": "^3.4.1"
   }
 }
