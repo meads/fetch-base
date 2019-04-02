@@ -16,18 +16,18 @@ https://mikeads.com/
 
 
 ```ts
-import { FetchBase, IFetchBase }  from "fetch-base"
+import { FetchBase }  from "fetch-base"
 
 export class Plant {
     constructor(
+        public id: number = 0,
         public commonName: string = "",
         public genus: string = "",
         public species: string = "",
     ){}
 }
 
-interface IPlantService extends IFetchBase<Plant> {}
-class PlantService extends FetchBase<Plant> implements IPlantService {
+export class PlantService extends FetchBase<Plant> {
     constructor() {
         super({
             ip: "localhost:8080",
