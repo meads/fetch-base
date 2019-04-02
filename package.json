@@ -1,6 +1,6 @@
 {
   "name": "fetch-base",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "A base class for fetch requests.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -30,7 +30,7 @@
     "help": "jest -h"
   },
   "dependencies": {
-    "whatwg-fetch": "^2.0.3"
+    "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
     "@types/jest": "^22.1.1",
