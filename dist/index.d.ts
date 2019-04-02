@@ -1,8 +1,8 @@
 import "whatwg-fetch";
-export interface IIdentifyable {
-    [id: string]: string | number;
+export interface Identifyable {
+    id: number;
 }
-export interface IFetchBase<T> {
+export interface IFetchBase<T extends Identifyable> {
     get(): Promise<T[]>;
     put(item: T): Promise<Object>;
     post(item: T): Promise<Object>;
@@ -14,12 +14,12 @@ export interface IFetchConfig {
     api: string;
     protocol: "http" | "https";
 }
-export declare class FetchBase<T> implements IFetchBase<T> {
+export declare class FetchBase<T extends Identifyable> implements IFetchBase<T> {
     private config;
     protected endpoint: string;
     constructor(config: IFetchConfig);
     findAll<TResult>(suffix?: string): Promise<TResult[]>;
-    single(id: string | number): Promise<T>;
+    single(id: number): Promise<T>;
     get(): Promise<T[]>;
     put(item: T): Promise<Object>;
     post(item: T): Promise<Object>;
@@ -32,7 +32,7 @@ export declare class FetchBase<T> implements IFetchBase<T> {
      * @param params A list of name=value strings comma separated as parameters. The query params
      *               will be joined with the correct ? and & symbols.
      */
-    getUrl(resourceId?: string, queryParams?: any[]): string | never;
+    getUrl(resourceId?: number, queryParams?: any[]): string | never;
     protected getOptions(): RequestInit;
     protected putOptions(item: T): RequestInit;
     protected postOptions(item: T): RequestInit;

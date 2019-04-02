@@ -6,7 +6,6 @@ var FetchBase = /** @class */ (function () {
         this.config = config;
         this.endpoint = "";
     }
-    // https://test.com/resource/id/suffix
     FetchBase.prototype.findAll = function (suffix) {
         return fetch("" + this.getUrl() + suffix, this.getOptions())
             .then(this.handleFetchResponse)
@@ -14,7 +13,7 @@ var FetchBase = /** @class */ (function () {
             .catch(this.rejectErrorPromise);
     };
     FetchBase.prototype.single = function (id) {
-        return fetch(this.getUrl(id.toString()), this.getOptions())
+        return fetch(this.getUrl(id), this.getOptions())
             .then(this.handleFetchResponse)
             .then(this.jsonResponse)
             .catch(this.rejectErrorPromise);
@@ -26,7 +25,7 @@ var FetchBase = /** @class */ (function () {
             .catch(this.rejectErrorPromise);
     };
     FetchBase.prototype.put = function (item) {
-        return fetch(this.getUrl(item["id"]), this.putOptions(item))
+        return fetch(this.getUrl(item.id), this.putOptions(item))
             .then(function (response) {
             if (!response.ok) {
                 throw new Error(response.statusText);
@@ -37,13 +36,13 @@ var FetchBase = /** @class */ (function () {
             .catch(this.rejectErrorPromise);
     };
     FetchBase.prototype.post = function (item) {
-        return fetch(this.getUrl(item["id"]), this.postOptions(item))
+        return fetch(this.getUrl(item.id), this.postOptions(item))
             .then(this.handleFetchResponse)
             .then(this.jsonResponse)
             .catch(this.rejectErrorPromise);
     };
     FetchBase.prototype.delete = function (item) {
-        return fetch(this.getUrl(item["id"]), this.deleteOptions())
+        return fetch(this.getUrl(item.id), this.deleteOptions())
             .then(this.handleFetchResponse)
             .then(this.jsonResponse)
             .catch(this.rejectErrorPromise);
@@ -66,7 +65,7 @@ var FetchBase = /** @class */ (function () {
      *               will be joined with the correct ? and & symbols.
      */
     FetchBase.prototype.getUrl = function (resourceId, queryParams) {
-        if (resourceId === void 0) { resourceId = ""; }
+        if (resourceId === void 0) { resourceId = 0; }
         if (queryParams === void 0) { queryParams = []; }
         if (!this.config.protocol || !this.config.ip) {
             throw new Error("'protocol' and 'ip' props are required for fetch-base");
@@ -75,10 +74,7 @@ var FetchBase = /** @class */ (function () {
         var url = this.config.protocol + "://" + this.config.ip;
         url += this.config.api ? "/" + this.config.api : "";
         url += this.endpoint ? "/" + this.endpoint : "";
-        if (resourceId == "undefined" || resourceId == "null") {
-            throw new Error("objects of type T that fetch-base operates on need a unique identifier named 'id'");
-        }
-        if (resourceId) {
+        if (resourceId > 0) {
             url += "/" + resourceId;
         }
         if (queryParams && queryParams.length > 0) {
