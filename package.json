@@ -30,7 +30,7 @@
     "help": "jest -h"
   },
   "dependencies": {
-    "whatwg-fetch": "^3.0.0"
+    "whatwg-fetch": "3.0.0"
   },
   "devDependencies": {
     "@types/jest": "^22.1.1",
