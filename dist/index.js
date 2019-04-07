@@ -55,7 +55,7 @@ var FetchBase = /** @class */ (function () {
     };
     FetchBase.prototype.handleFetchResponse = function (response) {
         if (!response.ok) {
-            throw new Error(response.statusText);
+            return Promise.reject(new Error(response.statusText));
         }
         return response.json();
     };

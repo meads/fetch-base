@@ -66,7 +66,6 @@ export class FetchBase<T extends Identifyable> implements IFetchBase<T> {
         .catch(this.rejectErrorPromise)
     }
 
-
     protected rejectErrorPromise(reason: Error) {
         return Promise.reject(reason)
     }
@@ -77,7 +76,7 @@ export class FetchBase<T extends Identifyable> implements IFetchBase<T> {
 
     protected handleFetchResponse(response: Response) {
         if(!response.ok) {
-            throw new Error(response.statusText)
+            return Promise.reject(new Error(response.statusText))
         }
         return response.json()
     }
