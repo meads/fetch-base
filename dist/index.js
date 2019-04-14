@@ -26,12 +26,7 @@ var FetchBase = /** @class */ (function () {
     };
     FetchBase.prototype.put = function (item) {
         return fetch(this.getUrl(item.id), this.putOptions(item))
-            .then(function (response) {
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            }
-            return response.json();
-        })
+            .then(this.handleFetchResponse)
             .then(this.jsonResponse)
             .catch(this.rejectErrorPromise);
     };
@@ -86,16 +81,26 @@ var FetchBase = /** @class */ (function () {
         return url;
     };
     FetchBase.prototype.getOptions = function () {
-        return { method: "GET" };
-    };
-    FetchBase.prototype.putOptions = function (item) {
-        return { method: "PUT", body: JSON.stringify(item) };
+        return this.getRequestInit("GET");
     };
     FetchBase.prototype.postOptions = function (item) {
-        return { method: "POST", body: JSON.stringify(item) };
+        return this.getRequestInit("POST", JSON.stringify(item));
+    };
+    FetchBase.prototype.putOptions = function (item) {
+        return this.getRequestInit("PUT", JSON.stringify(item));
     };
     FetchBase.prototype.deleteOptions = function () {
-        return { method: "DELETE" };
+        return this.getRequestInit("DELETE");
+    };
+    FetchBase.prototype.getRequestInit = function (method, body) {
+        return {
+            body: body,
+            method: method,
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
     };
     return FetchBase;
 }());

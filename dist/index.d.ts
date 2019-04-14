@@ -34,7 +34,8 @@ export declare class FetchBase<T extends Identifyable> implements IFetchBase<T> 
      */
     getUrl(resourceId?: number, queryParams?: any[]): string | never;
     protected getOptions(): RequestInit;
-    protected putOptions(item: T): RequestInit;
     protected postOptions(item: T): RequestInit;
+    protected putOptions(item: T): RequestInit;
     protected deleteOptions(): RequestInit;
+    protected getRequestInit(method: string, body?: string): RequestInit;
 }
