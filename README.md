@@ -1,9 +1,7 @@
 # fetch-base
-A TypeScript base class for simplifying [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) requests. 
+An npm package that exports a base class for simplifying [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) requests. An extendable generic base class written in TypeScript for abstracting out fetch request semantics. 
 
-+ [npm package](https://www.npmjs.com/package/fetch-base)
-
-+ [example](https://github.com/meads/fetch-base-test)
++ [full example](https://github.com/meads/fetch-base-test)
 
 
 [![Build Status](https://travis-ci.com/meads/fetch-base.svg?branch=master)](https://travis-ci.com/meads/fetch-base)
