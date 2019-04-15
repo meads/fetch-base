@@ -1,6 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-require("whatwg-fetch");
+if (process.env.IS_BROWSER) {
+    require("whatwg-fetch");
+}
+else {
+    require("es6-promise").polyfill();
+    require("isomorphic-fetch");
+}
 var FetchBase = /** @class */ (function () {
     function FetchBase(config) {
         this.config = config;

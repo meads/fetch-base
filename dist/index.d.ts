@@ -1,4 +1,3 @@
-import "whatwg-fetch";
 export interface Identifyable {
     id: number;
 }
