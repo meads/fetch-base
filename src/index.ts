@@ -1,9 +1,5 @@
-if (process.env.IS_BROWSER) {
-    require("whatwg-fetch")
-} else {
-    require("es6-promise").polyfill()
-    require("isomorphic-fetch")
-}
+require("es6-promise").polyfill()
+require("isomorphic-fetch")
 
 export interface Identifyable {
     id: number
