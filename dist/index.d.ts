@@ -11,7 +11,7 @@ export interface IFetchBase<T extends Identifyable> {
 export interface IFetchConfig {
     ip: string;
     api: string;
-    protocol: "http" | "https";
+    protocol: string;
 }
 export declare class FetchBase<T extends Identifyable> implements IFetchBase<T> {
     private config;
