@@ -57,6 +57,7 @@ var FetchBase = /** @class */ (function () {
     };
     /**
      *
+     * @example https://some.com/some/api/v1/resource?param1=value1&param2=value2
      * @param params A list of name=value strings comma separated as parameters. The query params
      *               will be joined with the correct ? and & symbols.
      */
@@ -66,8 +67,12 @@ var FetchBase = /** @class */ (function () {
         if (!this.config.protocol || !this.config.ip) {
             throw new Error("'protocol' and 'ip' props are required for fetch-base");
         }
-        // https://some.com/some/api/v1/resource?param1=value1&param2=value2
-        var url = this.config.protocol + "://" + this.config.ip;
+        var _a = this.config, protocol = _a.protocol, ip = _a.ip, port = _a.port;
+        var portString = "";
+        if (port != null && port > 0) {
+            portString += ":" + port;
+        }
+        var url = protocol + "://" + ip + portString;
         url += this.config.api ? "/" + this.config.api : "";
         url += this.endpoint ? "/" + this.endpoint : "";
         if (resourceId > 0) {

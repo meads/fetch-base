@@ -9,9 +9,10 @@ export interface IFetchBase<T extends Identifyable> {
     findAll<TResult>(suffix: string): Promise<TResult[]>;
 }
 export interface IFetchConfig {
-    ip: string;
-    api: string;
     protocol: string;
+    ip: string;
+    port?: number;
+    api?: string;
 }
 export declare class FetchBase<T extends Identifyable> implements IFetchBase<T> {
     private config;
@@ -28,6 +29,7 @@ export declare class FetchBase<T extends Identifyable> implements IFetchBase<T> 
     protected handleFetchResponse(response: Response): Promise<any>;
     /**
      *
+     * @example https://some.com/some/api/v1/resource?param1=value1&param2=value2
      * @param params A list of name=value strings comma separated as parameters. The query params
      *               will be joined with the correct ? and & symbols.
      */

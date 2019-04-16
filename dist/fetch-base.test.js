@@ -41,14 +41,14 @@ var mockResponse = function (status, statusText, body) {
         ok: status >= 200 && status <= 299,
         statusText: statusText,
         headers: {
-            'Content-type': 'application/json'
+            "Content-type": "application/json"
         },
         body: JSON.stringify(body),
         json: function () { return Promise.resolve(body); }
     });
 };
 // GET
-test('FetchBase get should return a list of T given a 200 response and data was returned', function () {
+test("FetchBase get should return a list of T given a 200 response and data was returned", function () {
     // arrange
     var cat = new Cat();
     cat.age = 2;
@@ -70,7 +70,7 @@ test('FetchBase get should return a list of T given a 200 response and data was 
         expect(result).toEqual(dataResult);
     });
 });
-test('FetchBase get should return error if the Response.ok is false on 404 response code', function () {
+test("FetchBase get should return error if the Response.ok is false on 404 response code", function () {
     // arrange
     var result = "Resource not found :/";
     window.fetch = jest.fn().mockImplementation(function () {
@@ -87,7 +87,7 @@ test('FetchBase get should return error if the Response.ok is false on 404 respo
         expect(reason.message).toEqual(result);
     });
 });
-test('FetchBase get should return error if the Response.ok is false on 500 response code', function () {
+test("FetchBase get should return error if the Response.ok is false on 500 response code", function () {
     // arrange
     var result = "Internal Server Error";
     window.fetch = jest.fn().mockImplementation(function () {
@@ -104,7 +104,7 @@ test('FetchBase get should return error if the Response.ok is false on 500 respo
         expect(reason.message).toEqual(result);
     });
 });
-test('FetchBase get should return Error instance if the Response.ok is false', function () {
+test("FetchBase get should return Error instance if the Response.ok is false", function () {
     // arrange
     var result = "Internal Server Error";
     window.fetch = jest.fn().mockImplementation(function () {
@@ -121,7 +121,7 @@ test('FetchBase get should return Error instance if the Response.ok is false', f
         expect(reason instanceof Error).toEqual(true);
     });
 });
-test('FetchBase single should return a list of T given a 200 response and data was returned', function () {
+test("FetchBase single should return a list of T given a 200 response and data was returned", function () {
     // arrange
     var cat = new Cat();
     cat.age = 2;
@@ -143,7 +143,7 @@ test('FetchBase single should return a list of T given a 200 response and data w
         expect(result).toEqual(dataResult);
     });
 });
-test('FetchBase single should return error if the Response.ok is false on 404 response code', function () {
+test("FetchBase single should return error if the Response.ok is false on 404 response code", function () {
     // arrange
     var result = "Resource not found :/";
     window.fetch = jest.fn().mockImplementation(function () {
@@ -160,7 +160,7 @@ test('FetchBase single should return error if the Response.ok is false on 404 re
         expect(reason.message).toEqual(result);
     });
 });
-test('FetchBase single should return error if the Response.ok is false on 500 response code', function () {
+test("FetchBase single should return error if the Response.ok is false on 500 response code", function () {
     // arrange
     var result = "Internal Server Error";
     window.fetch = jest.fn().mockImplementation(function () {
@@ -177,7 +177,7 @@ test('FetchBase single should return error if the Response.ok is false on 500 re
         expect(reason.message).toEqual(result);
     });
 });
-test('FetchBase single should return Error instance if the Response.ok is false', function () {
+test("FetchBase single should return Error instance if the Response.ok is false", function () {
     // arrange
     var result = "Internal Server Error";
     window.fetch = jest.fn().mockImplementation(function () {
@@ -194,7 +194,7 @@ test('FetchBase single should return Error instance if the Response.ok is false'
         expect(reason instanceof Error).toEqual(true);
     });
 });
-test('FetchBase findAll should return a list of T given a 200 response and data was returned', function () {
+test("FetchBase findAll should return a list of T given a 200 response and data was returned", function () {
     // arrange
     var cat = new Cat();
     cat.age = 2;
@@ -211,12 +211,14 @@ test('FetchBase findAll should return a list of T given a 200 response and data 
         api: "some/api/v1"
     };
     // act
-    return new FetchBaseTestDouble(config).findAll("/subroute").then(function (result) {
+    return new FetchBaseTestDouble(config)
+        .findAll("/subroute")
+        .then(function (result) {
         // assert
         expect(result).toEqual(dataResult);
     });
 });
-test('FetchBase findAll should return error if the Response.ok is false on 404 response code', function () {
+test("FetchBase findAll should return error if the Response.ok is false on 404 response code", function () {
     // arrange
     var result = "Resource not found :/";
     window.fetch = jest.fn().mockImplementation(function () {
@@ -228,12 +230,14 @@ test('FetchBase findAll should return error if the Response.ok is false on 404 r
         api: "some/api/v1"
     };
     // act
-    return new FetchBaseTestDouble(config).findAll("/subroute").catch(function (reason) {
+    return new FetchBaseTestDouble(config)
+        .findAll("/subroute")
+        .catch(function (reason) {
         // assert
         expect(reason.message).toEqual(result);
     });
 });
-test('FetchBase findAll should return error if the Response.ok is false on 500 response code', function () {
+test("FetchBase findAll should return error if the Response.ok is false on 500 response code", function () {
     // arrange
     var result = "Internal Server Error";
     window.fetch = jest.fn().mockImplementation(function () {
@@ -245,12 +249,14 @@ test('FetchBase findAll should return error if the Response.ok is false on 500 r
         api: "some/api/v1"
     };
     // act
-    return new FetchBaseTestDouble(config).findAll("/subroute").catch(function (reason) {
+    return new FetchBaseTestDouble(config)
+        .findAll("/subroute")
+        .catch(function (reason) {
         // assert
         expect(reason.message).toEqual(result);
     });
 });
-test('FetchBase findAll should return Error instance if the Response.ok is false', function () {
+test("FetchBase findAll should return Error instance if the Response.ok is false", function () {
     // arrange
     var result = "Internal Server Error";
     window.fetch = jest.fn().mockImplementation(function () {
@@ -262,13 +268,15 @@ test('FetchBase findAll should return Error instance if the Response.ok is false
         api: "some/api/v1"
     };
     // act
-    return new FetchBaseTestDouble(config).findAll("/subroute").catch(function (reason) {
+    return new FetchBaseTestDouble(config)
+        .findAll("/subroute")
+        .catch(function (reason) {
         // assert
         expect(reason instanceof Error).toEqual(true);
     });
 });
 // PUT
-test('FetchBase put should return an Object if there was a response body given a 200 response and data was returned', function () {
+test("FetchBase put should return an Object if there was a response body given a 200 response and data was returned", function () {
     // arrange
     var cat = new Cat();
     cat.age = 2;
@@ -291,7 +299,7 @@ test('FetchBase put should return an Object if there was a response body given a
         expect(result).toEqual(dataResult);
     });
 });
-test('FetchBase put should return error if the Response.ok is false on 404 response code', function () {
+test("FetchBase put should return error if the Response.ok is false on 404 response code", function () {
     // arrange
     var cat = new Cat();
     cat.age = 0;
@@ -314,7 +322,7 @@ test('FetchBase put should return error if the Response.ok is false on 404 respo
         expect(reason.message).toEqual(result);
     });
 });
-test('FetchBase put should return error if the Response.ok is false on 500 response code', function () {
+test("FetchBase put should return error if the Response.ok is false on 500 response code", function () {
     // arrange
     var cat = new Cat();
     cat.age = 2;
@@ -336,7 +344,7 @@ test('FetchBase put should return error if the Response.ok is false on 500 respo
         expect(reason.message).toEqual(result);
     });
 });
-test('FetchBase put should return Error instance if the Response.ok is false', function () {
+test("FetchBase put should return Error instance if the Response.ok is false", function () {
     // arrange
     var cat = new Cat();
     cat.age = 2;
@@ -359,7 +367,7 @@ test('FetchBase put should return Error instance if the Response.ok is false', f
     });
 });
 // POST
-test('FetchBase post should return an Object if there was a response body given a 200 response and data was returned', function () {
+test("FetchBase post should return an Object if there was a response body given a 200 response and data was returned", function () {
     // arrange
     var cat = new Cat();
     cat.age = 2;
@@ -382,7 +390,7 @@ test('FetchBase post should return an Object if there was a response body given 
         expect(result).toEqual(dataResult);
     });
 });
-test('FetchBase post should return error if the Response.ok is false on 404 response code', function () {
+test("FetchBase post should return error if the Response.ok is false on 404 response code", function () {
     // arrange
     var cat = new Cat();
     cat.age = 0;
@@ -405,7 +413,7 @@ test('FetchBase post should return error if the Response.ok is false on 404 resp
         expect(reason.message).toEqual(result);
     });
 });
-test('FetchBase post should return error if the Response.ok is false on 500 response code', function () {
+test("FetchBase post should return error if the Response.ok is false on 500 response code", function () {
     // arrange
     var cat = new Cat();
     cat.age = 2;
@@ -427,7 +435,7 @@ test('FetchBase post should return error if the Response.ok is false on 500 resp
         expect(reason.message).toEqual(result);
     });
 });
-test('FetchBase post should return Error instance if the Response.ok is false', function () {
+test("FetchBase post should return Error instance if the Response.ok is false", function () {
     // arrange
     var cat = new Cat();
     cat.age = 2;
@@ -449,8 +457,8 @@ test('FetchBase post should return Error instance if the Response.ok is false', 
         expect(reason instanceof Error).toEqual(true);
     });
 });
-// DELETE 
-test('FetchBase delete should return true if there was a response body given a 200 response and data was returned', function () {
+// DELETE
+test("FetchBase delete should return true if there was a response body given a 200 response and data was returned", function () {
     // arrange
     var cat = new Cat();
     cat.age = 2;
@@ -473,7 +481,7 @@ test('FetchBase delete should return true if there was a response body given a 2
         expect(result).toEqual(dataResult);
     });
 });
-test('FetchBase delete should return error if the Response.ok is false on 404 response code', function () {
+test("FetchBase delete should return error if the Response.ok is false on 404 response code", function () {
     // arrange
     var cat = new Cat();
     cat.age = 0;
@@ -496,7 +504,7 @@ test('FetchBase delete should return error if the Response.ok is false on 404 re
         expect(reason.message).toEqual(result);
     });
 });
-test('FetchBase delete should return error if the Response.ok is false on 500 response code', function () {
+test("FetchBase delete should return error if the Response.ok is false on 500 response code", function () {
     // arrange
     var cat = new Cat();
     cat.age = 2;
@@ -518,7 +526,7 @@ test('FetchBase delete should return error if the Response.ok is false on 500 re
         expect(reason.message).toEqual(result);
     });
 });
-test('FetchBase delete should return Error instance if the Response.ok is false', function () {
+test("FetchBase delete should return Error instance if the Response.ok is false", function () {
     // arrange
     var cat = new Cat();
     cat.age = 2;
@@ -541,7 +549,7 @@ test('FetchBase delete should return Error instance if the Response.ok is false'
     });
 });
 // getUrl
-test('FetchBase getUrl should return a formatted resource url given a config with protocol, ip, api, resource id and params', function () {
+test("FetchBase getUrl should return a formatted resource url given a config with protocol, ip, api, resource id and params", function () {
     var expected = "http://localhost/some/api/v1/resource/42?param1=value1&param2=value2";
     var config = {
         ip: "localhost",
@@ -551,7 +559,7 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
     var catService = new FetchBaseTestDouble(config);
     expect(catService.getUrl(42, ["param1=value1", "param2=value2"])).toBe(expected);
 });
-test('FetchBase getUrl should return a formatted resource url given a config with protocol, ip, api, resource id and one param', function () {
+test("FetchBase getUrl should return a formatted resource url given a config with protocol, ip, api, resource id and one param", function () {
     var expected = "http://localhost/some/api/v1/resource/42?param=value";
     var config = {
         ip: "localhost",
@@ -561,7 +569,7 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
     var catService = new FetchBaseTestDouble(config);
     expect(catService.getUrl(42, ["param=value"])).toBe(expected);
 });
-test('FetchBase getUrl should return a formatted resource url given a config with protocol, ip, api, resource id and no params', function () {
+test("FetchBase getUrl should return a formatted resource url given a config with protocol, ip, api, resource id and no params", function () {
     var expected = "http://localhost/some/api/v1/resource/42";
     var config = {
         ip: "localhost",
@@ -571,7 +579,7 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
     var catService = new FetchBaseTestDouble(config);
     expect(catService.getUrl(42)).toBe(expected);
 });
-test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, no resource id and params', function () {
+test("FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, no resource id and params", function () {
     var expected = "http://localhost/some/api/v1/resource?param=value&param2=value2";
     var config = {
         ip: "localhost",
@@ -581,7 +589,7 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
     var catService = new FetchBaseTestDouble(config);
     expect(catService.getUrl(0, ["param=value", "param2=value2"])).toBe(expected);
 });
-test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, resource id = 0 and one param', function () {
+test("FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, resource id = 0 and one param", function () {
     var expected = "http://localhost/some/api/v1/resource?param=value";
     var config = {
         ip: "localhost",
@@ -591,7 +599,7 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
     var catService = new FetchBaseTestDouble(config);
     expect(catService.getUrl(0, ["param=value"])).toBe(expected);
 });
-test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, no resource id and no params', function () {
+test("FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, no resource id and no params", function () {
     var expected = "http://localhost/some/api/v1/resource";
     var config = {
         ip: "localhost",
@@ -601,7 +609,7 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
     var catService = new FetchBaseTestDouble(config);
     expect(catService.getUrl()).toBe(expected);
 });
-test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, no api, no resource id and no params', function () {
+test("FetchBase getUrl should return a formatted resource url given a config with ip, protocol, no api, no resource id and no params", function () {
     var expected = "http://localhost/resource";
     var config = {
         ip: "localhost",
@@ -612,7 +620,7 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
     expect(catService.getUrl()).toBe(expected);
 });
 // endpoint
-test('FetchBase getUrl should return a formatted resource url given a config with ip, protocol, no [endpoint, api, id, params]', function () {
+test("FetchBase getUrl should return a formatted resource url given a config with ip, protocol, no [endpoint, api, id, params]", function () {
     var expected = "http://localhost";
     var config = {
         ip: "localhost",
@@ -622,9 +630,28 @@ test('FetchBase getUrl should return a formatted resource url given a config wit
     var catService = new FetchBaseTestDoubleNoEndpoint(config);
     expect(catService.getUrl()).toBe(expected);
 });
-test('FetchBase getUrl should return throw an Exception given a config with no ip or no protocol', function () {
+test("FetchBase getUrl should return throw an Exception given a config with no ip or no protocol", function () {
     var config = {};
     var catService = new FetchBaseTestDouble(config);
     expect(function () { return catService.getUrl(); }).toThrow("'protocol' and 'ip' props are required for fetch-base");
+});
+test("FetchBase getUrl should return url with a port given the supplied config specified one.", function () {
+    var config = {
+        protocol: "https",
+        ip: "localhost",
+        port: 3000,
+        api: "api/v1"
+    };
+    var PlantService = /** @class */ (function (_super) {
+        __extends(PlantService, _super);
+        function PlantService(config) {
+            var _this = _super.call(this, config) || this;
+            _this.endpoint = "plant";
+            return _this;
+        }
+        return PlantService;
+    }(index_1.FetchBase));
+    var plantService = new PlantService(config);
+    expect(plantService.getUrl()).toBe("https://localhost:3000/api/v1/plant");
 });
 //# sourceMappingURL=fetch-base.test.js.map

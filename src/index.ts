@@ -14,9 +14,10 @@ export interface IFetchBase<T extends Identifyable> {
 }
 
 export interface IFetchConfig {
-    ip: string
-    api: string
     protocol: string
+    ip: string
+    port?: number
+    api?: string
 }
 
 export class FetchBase<T extends Identifyable> implements IFetchBase<T> {
@@ -78,6 +79,7 @@ export class FetchBase<T extends Identifyable> implements IFetchBase<T> {
 
     /**
      *
+     * @example https://some.com/some/api/v1/resource?param1=value1&param2=value2
      * @param params A list of name=value strings comma separated as parameters. The query params
      *               will be joined with the correct ? and & symbols.
      */
@@ -90,12 +92,17 @@ export class FetchBase<T extends Identifyable> implements IFetchBase<T> {
                 "'protocol' and 'ip' props are required for fetch-base"
             )
         }
+        let { protocol, ip, port } = this.config
+        let portString = ""
 
-        // https://some.com/some/api/v1/resource?param1=value1&param2=value2
-        let url = `${this.config.protocol}://${this.config.ip}`
+        if (port != null && port > 0) {
+            portString += `:${port}`
+        }
 
+        let url = `${protocol}://${ip}${portString}`
         url += this.config.api ? `/${this.config.api}` : ""
         url += this.endpoint ? `/${this.endpoint}` : ""
+
         if (resourceId > 0) {
             url += `/${resourceId}`
         }
