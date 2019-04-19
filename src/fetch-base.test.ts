@@ -21,18 +21,81 @@ class FetchBaseTestDoubleNoEndpoint extends FetchBase<Cat> {
     }
 }
 
-const mockResponse = (status, statusText, body) => {
+const defaultHeaders: HeadersInit = { "Content-type": "application/json" }
+const mockResponse = (status, statusText, body, headers = defaultHeaders) => {
     return Promise.resolve({
         status: status,
         ok: status >= 200 && status <= 299,
         statusText: statusText,
-        headers: {
-            "Content-type": "application/json"
-        },
+        headers,
         body: JSON.stringify(body),
         json: () => Promise.resolve(body)
     })
 }
+
+// HEAD
+
+test("HEAD should return a map of headers", () => {
+    // arrange
+    let cat = new Cat()
+    cat.id = 42
+    cat.age = 2
+    cat.agility = 42
+    cat.meow = "quiet"
+    cat.name = "jinx"
+    let headers = <any>{
+        "cat-id": "42",
+        "cat-last-updated": "1/1/2019",
+        "cat-is-active": "1"
+    }
+
+    window.fetch = jest.fn().mockImplementation(() => {
+        return mockResponse(200, null, null, headers)
+    })
+    let config = <IFetchConfig>{
+        api: "some/api/v1"
+    }
+
+    // act
+    return new FetchBaseTestDouble(config).head(cat).then(result => {
+        // assert
+        expect(result).toEqual(headers)
+    })
+})
+
+test("HEAD should error with appropriate statusText when http statusCode 404", () => {
+    // arrange
+    let cat = new Cat()
+    window.fetch = jest.fn().mockImplementation(() => {
+        return mockResponse(404, "not found", null)
+    })
+    let config = <IFetchConfig>{
+        api: "some/api/v1"
+    }
+
+    // act
+    return new FetchBaseTestDouble(config).head(cat).catch(err => {
+        // assert
+        expect(err).toEqual(new Error("not found"))
+    })
+})
+
+test("HEAD should error with appropriate statusText when http statusCode 500", () => {
+    // arrange
+    let cat = new Cat()
+    window.fetch = jest.fn().mockImplementation(() => {
+        return mockResponse(500, "internal server error", null)
+    })
+    let config = <IFetchConfig>{
+        api: "some/api/v1"
+    }
+
+    // act
+    return new FetchBaseTestDouble(config).head(cat).catch(err => {
+        // assert
+        expect(err).toEqual(new Error("internal server error"))
+    })
+})
 
 // GET
 
@@ -49,8 +112,6 @@ test("FetchBase get should return a list of T given a 200 response and data was 
         return mockResponse(200, null, dataResult)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
 
@@ -68,8 +129,6 @@ test("FetchBase get should return error if the Response.ok is false on 404 respo
         return mockResponse(404, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
 
@@ -87,8 +146,6 @@ test("FetchBase get should return error if the Response.ok is false on 500 respo
         return mockResponse(500, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
     // act
@@ -105,8 +162,6 @@ test("FetchBase get should return Error instance if the Response.ok is false", (
         return mockResponse(500, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
     // act
@@ -129,13 +184,11 @@ test("FetchBase single should return a list of T given a 200 response and data w
         return mockResponse(200, null, dataResult)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
 
     // act
-    return new FetchBaseTestDouble(config).single(1).then(result => {
+    return new FetchBaseTestDouble(config).find(1).then(result => {
         // assert
         expect(result).toEqual(dataResult)
     })
@@ -148,13 +201,11 @@ test("FetchBase single should return error if the Response.ok is false on 404 re
         return mockResponse(404, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
 
     // act
-    return new FetchBaseTestDouble(config).single(1).catch(reason => {
+    return new FetchBaseTestDouble(config).find(1).catch(reason => {
         // assert
         expect(reason.message).toEqual(result)
     })
@@ -167,12 +218,10 @@ test("FetchBase single should return error if the Response.ok is false on 500 re
         return mockResponse(500, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
     // act
-    return new FetchBaseTestDouble(config).single(1).catch(reason => {
+    return new FetchBaseTestDouble(config).find(1).catch(reason => {
         // assert
         expect(reason.message).toEqual(result)
     })
@@ -185,12 +234,10 @@ test("FetchBase single should return Error instance if the Response.ok is false"
         return mockResponse(500, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
     // act
-    return new FetchBaseTestDouble(config).single(1).catch(reason => {
+    return new FetchBaseTestDouble(config).find(1).catch(reason => {
         // assert
         expect(reason instanceof Error).toEqual(true)
     })
@@ -209,8 +256,6 @@ test("FetchBase findAll should return a list of T given a 200 response and data 
         return mockResponse(200, null, dataResult)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
 
@@ -230,8 +275,6 @@ test("FetchBase findAll should return error if the Response.ok is false on 404 r
         return mockResponse(404, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
 
@@ -251,8 +294,6 @@ test("FetchBase findAll should return error if the Response.ok is false on 500 r
         return mockResponse(500, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
     // act
@@ -271,8 +312,6 @@ test("FetchBase findAll should return Error instance if the Response.ok is false
         return mockResponse(500, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
     // act
@@ -301,8 +340,6 @@ test("FetchBase put should return an Object if there was a response body given a
         return mockResponse(200, null, dataResult)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
 
@@ -327,8 +364,6 @@ test("FetchBase put should return error if the Response.ok is false on 404 respo
         return mockResponse(404, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
 
@@ -352,8 +387,6 @@ test("FetchBase put should return error if the Response.ok is false on 500 respo
         return mockResponse(500, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
     // act
@@ -376,8 +409,6 @@ test("FetchBase put should return Error instance if the Response.ok is false", (
         return mockResponse(500, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
     // act
@@ -404,8 +435,6 @@ test("FetchBase post should return an Object if there was a response body given 
         return mockResponse(200, null, dataResult)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
 
@@ -430,8 +459,6 @@ test("FetchBase post should return error if the Response.ok is false on 404 resp
         return mockResponse(404, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
 
@@ -455,8 +482,6 @@ test("FetchBase post should return error if the Response.ok is false on 500 resp
         return mockResponse(500, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
     // act
@@ -479,8 +504,6 @@ test("FetchBase post should return Error instance if the Response.ok is false", 
         return mockResponse(500, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
     // act
@@ -507,8 +530,6 @@ test("FetchBase delete should return true if there was a response body given a 2
         return mockResponse(200, null, dataResult)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
 
@@ -533,8 +554,6 @@ test("FetchBase delete should return error if the Response.ok is false on 404 re
         return mockResponse(404, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
 
@@ -558,8 +577,6 @@ test("FetchBase delete should return error if the Response.ok is false on 500 re
         return mockResponse(500, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
     // act
@@ -582,8 +599,6 @@ test("FetchBase delete should return Error instance if the Response.ok is false"
         return mockResponse(500, result, null)
     })
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
     // act
@@ -599,68 +614,61 @@ test("FetchBase getUrl should return a formatted resource url given a config wit
     const expected =
         "http://localhost/some/api/v1/resource/42?param1=value1&param2=value2"
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
+    let c = new Cat()
+    c.id = 42
     const catService = new FetchBaseTestDouble(config)
-    expect(catService.getUrl(42, ["param1=value1", "param2=value2"])).toBe(
-        expected
-    )
+    expect(catService.getUrl(c, "?param1=value1&param2=value2")).toBe(expected)
 })
 
 test("FetchBase getUrl should return a formatted resource url given a config with protocol, ip, api, resource id and one param", () => {
     const expected = "http://localhost/some/api/v1/resource/42?param=value"
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
+    let c = new Cat()
+    c.id = 42
     const catService = new FetchBaseTestDouble(config)
-    expect(catService.getUrl(42, ["param=value"])).toBe(expected)
+    expect(catService.getUrl(c, "?param=value")).toBe(expected)
 })
 
 test("FetchBase getUrl should return a formatted resource url given a config with protocol, ip, api, resource id and no params", () => {
     const expected = "http://localhost/some/api/v1/resource/42"
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
+    let c = new Cat()
+    c.id = 42
     const catService = new FetchBaseTestDouble(config)
-    expect(catService.getUrl(42)).toBe(expected)
+    expect(catService.getUrl(c)).toBe(expected)
 })
 
 test("FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, no resource id and params", () => {
     const expected =
         "http://localhost/some/api/v1/resource?param=value&param2=value2"
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
+    let c = new Cat()
     const catService = new FetchBaseTestDouble(config)
-    expect(catService.getUrl(0, ["param=value", "param2=value2"])).toBe(
-        expected
-    )
+    expect(catService.getUrl(c, "?param=value&param2=value2")).toBe(expected)
 })
 
 test("FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, resource id = 0 and one param", () => {
     const expected = "http://localhost/some/api/v1/resource?param=value"
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
+    let c = new Cat()
+    c.id = 0
     const catService = new FetchBaseTestDouble(config)
-    expect(catService.getUrl(0, ["param=value"])).toBe(expected)
+    expect(catService.getUrl(c, "?param=value")).toBe(expected)
 })
 
 test("FetchBase getUrl should return a formatted resource url given a config with ip, protocol, api, no resource id and no params", () => {
     const expected = "http://localhost/some/api/v1/resource"
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: "some/api/v1"
     }
     const catService = new FetchBaseTestDouble(config)
@@ -669,11 +677,7 @@ test("FetchBase getUrl should return a formatted resource url given a config wit
 
 test("FetchBase getUrl should return a formatted resource url given a config with ip, protocol, no api, no resource id and no params", () => {
     const expected = "http://localhost/resource"
-    let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
-        api: ""
-    }
+    let config = <IFetchConfig>{ api: "" }
     const catService = new FetchBaseTestDouble(config)
     expect(catService.getUrl()).toBe(expected)
 })
@@ -682,8 +686,6 @@ test("FetchBase getUrl should return a formatted resource url given a config wit
 test("FetchBase getUrl should return a formatted resource url given a config with ip, protocol, no [endpoint, api, id, params]", () => {
     const expected = "http://localhost"
     let config = <IFetchConfig>{
-        ip: "localhost",
-        protocol: "http",
         api: ""
     }
     let catService = new FetchBaseTestDoubleNoEndpoint(config)
@@ -691,18 +693,9 @@ test("FetchBase getUrl should return a formatted resource url given a config wit
     expect(catService.getUrl()).toBe(expected)
 })
 
-test("FetchBase getUrl should return throw an Exception given a config with no ip or no protocol", () => {
-    let config = <IFetchConfig>{}
-    const catService = new FetchBaseTestDouble(config)
-    expect(() => catService.getUrl()).toThrow(
-        "'protocol' and 'ip' props are required for fetch-base"
-    )
-})
-
-test("FetchBase getUrl should return url with a port given the supplied config specified one.", () => {
+test("FetchBase getUrl should return url with a port given it exists in the config.", () => {
     let config = <IFetchConfig>{
         protocol: "https",
-        ip: "localhost",
         port: 3000,
         api: "api/v1"
     }

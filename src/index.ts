@@ -2,15 +2,7 @@ require("es6-promise").polyfill()
 require("isomorphic-fetch")
 
 export interface Identifyable {
-    id: number
-}
-
-export interface IFetchBase<T extends Identifyable> {
-    get(): Promise<T[]>
-    put(item: T): Promise<Object>
-    post(item: T): Promise<Object>
-    delete(item: T): Promise<boolean>
-    findAll<TResult>(suffix: string): Promise<TResult[]>
+    id: any
 }
 
 export interface IFetchConfig {
@@ -20,79 +12,72 @@ export interface IFetchConfig {
     api?: string
 }
 
-export class FetchBase<T extends Identifyable> implements IFetchBase<T> {
+export interface IFetchBase<T extends Identifyable> {
+    delete(item: T): Promise<any>
+    find(id: any): Promise<T>
+    findAll<TResult>(suffix?: string): Promise<TResult[]>
+    get(queryParams?: string): Promise<T[]>
+    head(item: T): Promise<any>
+    post(item: T): Promise<any>
+    put(item: T): Promise<any>
+}
+
+export abstract class FetchBase<T extends Identifyable>
+    implements IFetchBase<T> {
     protected endpoint: string = ""
+    protected requestMode: RequestMode = "cors"
 
     constructor(private config: IFetchConfig) {}
 
+    head(item: T): Promise<any> {
+        return fetch(this.getUrl(item), this.headOptions())
+            .then(this.handleHeadFetchResponse)
+            .catch(this.rejectErrorPromise)
+    }
     findAll<TResult>(suffix?: string): Promise<TResult[]> {
         return fetch(`${this.getUrl()}${suffix}`, this.getOptions())
             .then(this.handleFetchResponse)
-            .then(this.jsonResponse)
+            .then((json: any) => this.jsonResponse<TResult[]>(json))
             .catch(this.rejectErrorPromise)
     }
-    single(id: number): Promise<T> {
-        return fetch(this.getUrl(id), this.getOptions())
+    find(id: any): Promise<T> {
+        return fetch(this.getUrl(<T>{ id }), this.getOptions())
             .then(this.handleFetchResponse)
-            .then(this.jsonResponse)
+            .then((json: any) => this.jsonResponse<T>(json))
             .catch(this.rejectErrorPromise)
     }
-    get(): Promise<T[]> {
-        return fetch(this.getUrl(), this.getOptions())
+    get(queryParams?: string): Promise<T[]> {
+        return fetch(this.getUrl(void 0, queryParams), this.getOptions())
             .then(this.handleFetchResponse)
-            .then(this.jsonResponse)
+            .then((json: any) => this.jsonResponse<T[]>(json))
             .catch(this.rejectErrorPromise)
     }
-    put(item: T): Promise<Object> {
-        return fetch(this.getUrl(item.id), this.putOptions(item))
+    put(item: T): Promise<any> {
+        return fetch(this.getUrl(item), this.putOptions(item))
             .then(this.handleFetchResponse)
-            .then(this.jsonResponse)
+            .then((json: any) => this.jsonResponse<any>(json))
             .catch(this.rejectErrorPromise)
     }
-    post(item: T): Promise<Object> {
-        return fetch(this.getUrl(item.id), this.postOptions(item))
+    post(item: T): Promise<any> {
+        return fetch(this.getUrl(item), this.postOptions(item))
             .then(this.handleFetchResponse)
-            .then(this.jsonResponse)
+            .then((json: any) => this.jsonResponse<any>(json))
             .catch(this.rejectErrorPromise)
     }
-    delete(item: T): Promise<boolean> {
-        return fetch(this.getUrl(item.id), this.deleteOptions())
+    delete(item: T): Promise<any> {
+        return fetch(this.getUrl(item), this.deleteOptions())
             .then(this.handleFetchResponse)
-            .then(this.jsonResponse)
+            .then((json: any) => this.jsonResponse<any>(json))
             .catch(this.rejectErrorPromise)
     }
-
-    protected rejectErrorPromise(reason: Error) {
-        return Promise.reject(reason)
-    }
-
-    protected jsonResponse(json) {
-        return Promise.resolve(json)
-    }
-
-    protected handleFetchResponse(response: Response) {
-        if (!response.ok) {
-            return Promise.reject(new Error(response.statusText))
-        }
-        return response.json()
-    }
-
-    /**
-     *
-     * @example https://some.com/some/api/v1/resource?param1=value1&param2=value2
-     * @param params A list of name=value strings comma separated as parameters. The query params
-     *               will be joined with the correct ? and & symbols.
-     */
-    public getUrl(
-        resourceId: number = 0,
-        queryParams: any[] = []
-    ): string | never {
-        if (!this.config.protocol || !this.config.ip) {
-            throw new Error(
-                "'protocol' and 'ip' props are required for fetch-base"
-            )
-        }
+    getUrl(resource?: T, queryParams?: string): string {
         let { protocol, ip, port } = this.config
+        if (!protocol) {
+            protocol = "http"
+        }
+        if (!ip) {
+            ip = "localhost"
+        }
         let portString = ""
 
         if (port != null && port > 0) {
@@ -103,19 +88,43 @@ export class FetchBase<T extends Identifyable> implements IFetchBase<T> {
         url += this.config.api ? `/${this.config.api}` : ""
         url += this.endpoint ? `/${this.endpoint}` : ""
 
-        if (resourceId > 0) {
+        let resourceId = ""
+        if (resource != null && resource.id != null) {
+            resourceId = resource.id.toString()
+        }
+        if (resourceId.length > 0 && resourceId != "0") {
             url += `/${resourceId}`
         }
 
-        if (queryParams && queryParams.length > 0) {
-            url = `${url}?${queryParams.shift()}`
-            if (queryParams.length > 0) {
-                url += queryParams.map(p => `&${p}`).join("")
-            }
+        if (queryParams != null && queryParams.length > 0) {
+            url += queryParams
         }
+
         return url
     }
 
+    protected rejectErrorPromise(reason: Error) {
+        return Promise.reject(reason)
+    }
+    protected jsonResponse<TResult>(json) {
+        return Promise.resolve<TResult>(json)
+    }
+    protected handleFetchResponse(response: Response) {
+        if (!response.ok) {
+            return Promise.reject(new Error(response.statusText))
+        }
+        return response.json()
+    }
+    protected handleHeadFetchResponse(response: Response) {
+        if (!response.ok) {
+            return Promise.reject(new Error(response.statusText))
+        }
+        return Promise.resolve(response.headers)
+    }
+
+    protected headOptions(): RequestInit {
+        return this.getRequestInit("HEAD")
+    }
     protected getOptions(): RequestInit {
         return this.getRequestInit("GET")
     }
@@ -132,7 +141,7 @@ export class FetchBase<T extends Identifyable> implements IFetchBase<T> {
         return {
             body,
             method,
-            mode: "cors",
+            mode: this.requestMode,
             headers: {
                 "Content-Type": "application/json"
             }

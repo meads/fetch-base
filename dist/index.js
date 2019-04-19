@@ -6,42 +6,81 @@ var FetchBase = /** @class */ (function () {
     function FetchBase(config) {
         this.config = config;
         this.endpoint = "";
+        this.requestMode = "cors";
     }
+    FetchBase.prototype.head = function (item) {
+        return fetch(this.getUrl(item), this.headOptions())
+            .then(this.handleHeadFetchResponse)
+            .catch(this.rejectErrorPromise);
+    };
     FetchBase.prototype.findAll = function (suffix) {
+        var _this = this;
         return fetch("" + this.getUrl() + suffix, this.getOptions())
             .then(this.handleFetchResponse)
-            .then(this.jsonResponse)
+            .then(function (json) { return _this.jsonResponse(json); })
             .catch(this.rejectErrorPromise);
     };
-    FetchBase.prototype.single = function (id) {
-        return fetch(this.getUrl(id), this.getOptions())
+    FetchBase.prototype.find = function (id) {
+        var _this = this;
+        return fetch(this.getUrl({ id: id }), this.getOptions())
             .then(this.handleFetchResponse)
-            .then(this.jsonResponse)
+            .then(function (json) { return _this.jsonResponse(json); })
             .catch(this.rejectErrorPromise);
     };
-    FetchBase.prototype.get = function () {
-        return fetch(this.getUrl(), this.getOptions())
+    FetchBase.prototype.get = function (queryParams) {
+        var _this = this;
+        return fetch(this.getUrl(void 0, queryParams), this.getOptions())
             .then(this.handleFetchResponse)
-            .then(this.jsonResponse)
+            .then(function (json) { return _this.jsonResponse(json); })
             .catch(this.rejectErrorPromise);
     };
     FetchBase.prototype.put = function (item) {
-        return fetch(this.getUrl(item.id), this.putOptions(item))
+        var _this = this;
+        return fetch(this.getUrl(item), this.putOptions(item))
             .then(this.handleFetchResponse)
-            .then(this.jsonResponse)
+            .then(function (json) { return _this.jsonResponse(json); })
             .catch(this.rejectErrorPromise);
     };
     FetchBase.prototype.post = function (item) {
-        return fetch(this.getUrl(item.id), this.postOptions(item))
+        var _this = this;
+        return fetch(this.getUrl(item), this.postOptions(item))
             .then(this.handleFetchResponse)
-            .then(this.jsonResponse)
+            .then(function (json) { return _this.jsonResponse(json); })
             .catch(this.rejectErrorPromise);
     };
     FetchBase.prototype.delete = function (item) {
-        return fetch(this.getUrl(item.id), this.deleteOptions())
+        var _this = this;
+        return fetch(this.getUrl(item), this.deleteOptions())
             .then(this.handleFetchResponse)
-            .then(this.jsonResponse)
+            .then(function (json) { return _this.jsonResponse(json); })
             .catch(this.rejectErrorPromise);
+    };
+    FetchBase.prototype.getUrl = function (resource, queryParams) {
+        var _a = this.config, protocol = _a.protocol, ip = _a.ip, port = _a.port;
+        if (!protocol) {
+            protocol = "http";
+        }
+        if (!ip) {
+            ip = "localhost";
+        }
+        var portString = "";
+        if (port != null && port > 0) {
+            portString += ":" + port;
+        }
+        var url = protocol + "://" + ip + portString;
+        url += this.config.api ? "/" + this.config.api : "";
+        url += this.endpoint ? "/" + this.endpoint : "";
+        var resourceId = "";
+        if (resource != null && resource.id != null) {
+            resourceId = resource.id.toString();
+        }
+        if (resourceId.length > 0 && resourceId != "0") {
+            url += "/" + resourceId;
+        }
+        if (queryParams != null && queryParams.length > 0) {
+            url += queryParams;
+        }
+        return url;
     };
     FetchBase.prototype.rejectErrorPromise = function (reason) {
         return Promise.reject(reason);
@@ -55,36 +94,14 @@ var FetchBase = /** @class */ (function () {
         }
         return response.json();
     };
-    /**
-     *
-     * @example https://some.com/some/api/v1/resource?param1=value1&param2=value2
-     * @param params A list of name=value strings comma separated as parameters. The query params
-     *               will be joined with the correct ? and & symbols.
-     */
-    FetchBase.prototype.getUrl = function (resourceId, queryParams) {
-        if (resourceId === void 0) { resourceId = 0; }
-        if (queryParams === void 0) { queryParams = []; }
-        if (!this.config.protocol || !this.config.ip) {
-            throw new Error("'protocol' and 'ip' props are required for fetch-base");
+    FetchBase.prototype.handleHeadFetchResponse = function (response) {
+        if (!response.ok) {
+            return Promise.reject(new Error(response.statusText));
         }
-        var _a = this.config, protocol = _a.protocol, ip = _a.ip, port = _a.port;
-        var portString = "";
-        if (port != null && port > 0) {
-            portString += ":" + port;
-        }
-        var url = protocol + "://" + ip + portString;
-        url += this.config.api ? "/" + this.config.api : "";
-        url += this.endpoint ? "/" + this.endpoint : "";
-        if (resourceId > 0) {
-            url += "/" + resourceId;
-        }
-        if (queryParams && queryParams.length > 0) {
-            url = url + "?" + queryParams.shift();
-            if (queryParams.length > 0) {
-                url += queryParams.map(function (p) { return "&" + p; }).join("");
-            }
-        }
-        return url;
+        return Promise.resolve(response.headers);
+    };
+    FetchBase.prototype.headOptions = function () {
+        return this.getRequestInit("HEAD");
     };
     FetchBase.prototype.getOptions = function () {
         return this.getRequestInit("GET");
@@ -102,7 +119,7 @@ var FetchBase = /** @class */ (function () {
         return {
             body: body,
             method: method,
-            mode: "cors",
+            mode: this.requestMode,
             headers: {
                 "Content-Type": "application/json"
             }

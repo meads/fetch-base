@@ -1,12 +1,5 @@
 export interface Identifyable {
-    id: number;
-}
-export interface IFetchBase<T extends Identifyable> {
-    get(): Promise<T[]>;
-    put(item: T): Promise<Object>;
-    post(item: T): Promise<Object>;
-    delete(item: T): Promise<boolean>;
-    findAll<TResult>(suffix: string): Promise<TResult[]>;
+    id: any;
 }
 export interface IFetchConfig {
     protocol: string;
@@ -14,26 +7,33 @@ export interface IFetchConfig {
     port?: number;
     api?: string;
 }
-export declare class FetchBase<T extends Identifyable> implements IFetchBase<T> {
+export interface IFetchBase<T extends Identifyable> {
+    delete(item: T): Promise<any>;
+    find(id: any): Promise<T>;
+    findAll<TResult>(suffix?: string): Promise<TResult[]>;
+    get(queryParams?: string): Promise<T[]>;
+    head(item: T): Promise<any>;
+    post(item: T): Promise<any>;
+    put(item: T): Promise<any>;
+}
+export declare abstract class FetchBase<T extends Identifyable> implements IFetchBase<T> {
     private config;
     protected endpoint: string;
+    protected requestMode: RequestMode;
     constructor(config: IFetchConfig);
+    head(item: T): Promise<any>;
     findAll<TResult>(suffix?: string): Promise<TResult[]>;
-    single(id: number): Promise<T>;
-    get(): Promise<T[]>;
-    put(item: T): Promise<Object>;
-    post(item: T): Promise<Object>;
-    delete(item: T): Promise<boolean>;
+    find(id: any): Promise<T>;
+    get(queryParams?: string): Promise<T[]>;
+    put(item: T): Promise<any>;
+    post(item: T): Promise<any>;
+    delete(item: T): Promise<any>;
+    getUrl(resource?: T, queryParams?: string): string;
     protected rejectErrorPromise(reason: Error): Promise<never>;
-    protected jsonResponse(json: any): Promise<any>;
+    protected jsonResponse<TResult>(json: any): Promise<TResult>;
     protected handleFetchResponse(response: Response): Promise<any>;
-    /**
-     *
-     * @example https://some.com/some/api/v1/resource?param1=value1&param2=value2
-     * @param params A list of name=value strings comma separated as parameters. The query params
-     *               will be joined with the correct ? and & symbols.
-     */
-    getUrl(resourceId?: number, queryParams?: any[]): string | never;
+    protected handleHeadFetchResponse(response: Response): Promise<Headers>;
+    protected headOptions(): RequestInit;
     protected getOptions(): RequestInit;
     protected postOptions(item: T): RequestInit;
     protected putOptions(item: T): RequestInit;
