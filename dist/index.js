@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-require("es6-promise").polyfill();
-require("isomorphic-fetch");
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
 var FetchBase = /** @class */ (function () {
     function FetchBase(config) {
         this.config = config;
-        this.endpoint = "";
-        this.requestMode = "cors";
+        this.endpoint = '';
+        this.requestMode = 'cors';
     }
     FetchBase.prototype.head = function (item) {
         return fetch(this.getUrl(item), this.headOptions())
@@ -58,23 +58,23 @@ var FetchBase = /** @class */ (function () {
     FetchBase.prototype.getUrl = function (resource, queryParams) {
         var _a = this.config, protocol = _a.protocol, ip = _a.ip, port = _a.port;
         if (!protocol) {
-            protocol = "http";
+            protocol = 'http';
         }
         if (!ip) {
-            ip = "localhost";
+            ip = 'localhost';
         }
-        var portString = "";
+        var portString = '';
         if (port != null && port > 0) {
             portString += ":" + port;
         }
         var url = protocol + "://" + ip + portString;
-        url += this.config.api ? "/" + this.config.api : "";
-        url += this.endpoint ? "/" + this.endpoint : "";
-        var resourceId = "";
+        url += this.config.api ? "/" + this.config.api : '';
+        url += this.endpoint ? "/" + this.endpoint : '';
+        var resourceId = '';
         if (resource != null && resource.id != null) {
             resourceId = resource.id.toString();
         }
-        if (resourceId.length > 0 && resourceId != "0") {
+        if (resourceId.length > 0 && resourceId != '0') {
             url += "/" + resourceId;
         }
         if (queryParams != null && queryParams.length > 0) {
@@ -101,19 +101,19 @@ var FetchBase = /** @class */ (function () {
         return Promise.resolve(response.headers);
     };
     FetchBase.prototype.headOptions = function () {
-        return this.getRequestInit("HEAD");
+        return this.getRequestInit('HEAD');
     };
     FetchBase.prototype.getOptions = function () {
-        return this.getRequestInit("GET");
+        return this.getRequestInit('GET');
     };
     FetchBase.prototype.postOptions = function (item) {
-        return this.getRequestInit("POST", JSON.stringify(item));
+        return this.getRequestInit('POST', JSON.stringify(item));
     };
     FetchBase.prototype.putOptions = function (item) {
-        return this.getRequestInit("PUT", JSON.stringify(item));
+        return this.getRequestInit('PUT', JSON.stringify(item));
     };
     FetchBase.prototype.deleteOptions = function () {
-        return this.getRequestInit("DELETE");
+        return this.getRequestInit('DELETE');
     };
     FetchBase.prototype.getRequestInit = function (method, body) {
         return {
@@ -121,7 +121,7 @@ var FetchBase = /** @class */ (function () {
             method: method,
             mode: this.requestMode,
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             }
         };
     };

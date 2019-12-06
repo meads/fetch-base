@@ -1,6 +1,6 @@
 {
   "name": "fetch-base",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "A base class for fetch requests. An extendable generic base class written in TypeScript for abstracting out fetch request semantics.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -47,10 +47,10 @@
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "0.0.35",
-    "@types/jest": "^24.0.13",
-    "@types/node": "^11.13.13",
-    "codecov": "^3.5.0",
-    "jest": "^24.8.0",
-    "typescript": "^3.5.1"
+    "@types/jest": "^24.0.23",
+    "@types/node": "^11.15.3",
+    "codecov": "^3.6.1",
+    "jest": "^24.9.0",
+    "typescript": "^3.7.3"
   }
 }

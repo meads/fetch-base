@@ -22,12 +22,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>73/73</span>
+        <span class='fraction'>81/81</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">96.43% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>12/12</span>
+        <span class='fraction'>27/28</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>63/63</span>
+        <span class='fraction'>71/71</span>
       </div>
     </div>
     <p class="quiet">
@@ -270,15 +270,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">35x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -287,14 +287,14 @@
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -308,13 +308,13 @@
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -346,144 +346,144 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">require("es6-promise").polyfill()
-require("isomorphic-fetch")
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">require('es6-promise').polyfill();
+require('isomorphic-fetch');
 &nbsp;
 export interface Identifyable {
-    id: any
+    id: any;
 }
 &nbsp;
 export interface IFetchConfig {
-    protocol: string
-    ip: string
-    port?: number
-    api?: string
+    protocol: string;
+    ip: string;
+    port?: number;
+    api?: string;
 }
 &nbsp;
 export interface IFetchBase&lt;T extends Identifyable&gt; {
-    delete(item: T): Promise&lt;any&gt;
-    find(id: any): Promise&lt;T&gt;
-    findAll&lt;TResult&gt;(suffix?: string): Promise&lt;TResult[]&gt;
-    get(queryParams?: string): Promise&lt;T[]&gt;
-    head(item: T): Promise&lt;any&gt;
-    post(item: T): Promise&lt;any&gt;
-    put(item: T): Promise&lt;any&gt;
+    delete(item: T): Promise&lt;any&gt;;
+    find(id: any): Promise&lt;T&gt;;
+    findAll&lt;TResult&gt;(suffix?: string): Promise&lt;TResult[]&gt;;
+    get(queryParams?: string): Promise&lt;T[]&gt;;
+    head(item: T): Promise&lt;any&gt;;
+    post(item: T): Promise&lt;any&gt;;
+    put(item: T): Promise&lt;any&gt;;
 }
 &nbsp;
 export abstract class FetchBase&lt;T extends Identifyable&gt;
     implements IFetchBase&lt;T&gt; {
-    protected endpoint: string = ""
-    protected requestMode: RequestMode = "cors"
+    protected endpoint: string = '';
+    protected requestMode: RequestMode = 'cors';
 &nbsp;
     constructor(private config: IFetchConfig) {}
 &nbsp;
     head(item: T): Promise&lt;any&gt; {
         return fetch(this.getUrl(item), this.headOptions())
             .then(this.handleHeadFetchResponse)
-            .catch(this.rejectErrorPromise)
+            .catch(this.rejectErrorPromise);
     }
     findAll&lt;TResult&gt;(suffix?: string): Promise&lt;TResult[]&gt; {
         return fetch(`${this.getUrl()}${suffix}`, this.getOptions())
             .then(this.handleFetchResponse)
             .then((json: any) =&gt; this.jsonResponse&lt;TResult[]&gt;(json))
-            .catch(this.rejectErrorPromise)
+            .catch(this.rejectErrorPromise);
     }
     find(id: any): Promise&lt;T&gt; {
         return fetch(this.getUrl(&lt;T&gt;{ id }), this.getOptions())
             .then(this.handleFetchResponse)
             .then((json: any) =&gt; this.jsonResponse&lt;T&gt;(json))
-            .catch(this.rejectErrorPromise)
+            .catch(this.rejectErrorPromise);
     }
     get(queryParams?: string): Promise&lt;T[]&gt; {
         return fetch(this.getUrl(void 0, queryParams), this.getOptions())
             .then(this.handleFetchResponse)
             .then((json: any) =&gt; this.jsonResponse&lt;T[]&gt;(json))
-            .catch(this.rejectErrorPromise)
+            .catch(this.rejectErrorPromise);
     }
     put(item: T): Promise&lt;any&gt; {
         return fetch(this.getUrl(item), this.putOptions(item))
             .then(this.handleFetchResponse)
             .then((json: any) =&gt; this.jsonResponse&lt;any&gt;(json))
-            .catch(this.rejectErrorPromise)
+            .catch(this.rejectErrorPromise);
     }
     post(item: T): Promise&lt;any&gt; {
         return fetch(this.getUrl(item), this.postOptions(item))
             .then(this.handleFetchResponse)
             .then((json: any) =&gt; this.jsonResponse&lt;any&gt;(json))
-            .catch(this.rejectErrorPromise)
+            .catch(this.rejectErrorPromise);
     }
     delete(item: T): Promise&lt;any&gt; {
         return fetch(this.getUrl(item), this.deleteOptions())
             .then(this.handleFetchResponse)
             .then((json: any) =&gt; this.jsonResponse&lt;any&gt;(json))
-            .catch(this.rejectErrorPromise)
+            .catch(this.rejectErrorPromise);
     }
     getUrl(resource?: T, queryParams?: string): string {
-        let { protocol, ip, port } = this.config
+        let { protocol, ip, port } = this.config;
         if (!protocol) {
-            protocol = "http"
+            protocol = 'http';
         }
-        if (!ip) {
-            ip = "localhost"
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (!ip) {
+            ip = 'localhost';
         }
-        let portString = ""
+        let portString = '';
 &nbsp;
         if (port != null &amp;&amp; port &gt; 0) {
-            portString += `:${port}`
+            portString += `:${port}`;
         }
 &nbsp;
-        let url = `${protocol}://${ip}${portString}`
-        url += this.config.api ? `/${this.config.api}` : ""
-        url += this.endpoint ? `/${this.endpoint}` : ""
+        let url = `${protocol}://${ip}${portString}`;
+        url += this.config.api ? `/${this.config.api}` : '';
+        url += this.endpoint ? `/${this.endpoint}` : '';
 &nbsp;
-        let resourceId = ""
+        let resourceId = '';
         if (resource != null &amp;&amp; resource.id != null) {
-            resourceId = resource.id.toString()
+            resourceId = resource.id.toString();
         }
-        if (resourceId.length &gt; 0 &amp;&amp; resourceId != "0") {
-            url += `/${resourceId}`
+        if (resourceId.length &gt; 0 &amp;&amp; resourceId != '0') {
+            url += `/${resourceId}`;
         }
 &nbsp;
         if (queryParams != null &amp;&amp; queryParams.length &gt; 0) {
-            url += queryParams
+            url += queryParams;
         }
 &nbsp;
-        return url
+        return url;
     }
 &nbsp;
     protected rejectErrorPromise(reason: Error) {
-        return Promise.reject(reason)
+        return Promise.reject(reason);
     }
     protected jsonResponse&lt;TResult&gt;(json) {
-        return Promise.resolve&lt;TResult&gt;(json)
+        return Promise.resolve&lt;TResult&gt;(json);
     }
     protected handleFetchResponse(response: Response) {
         if (!response.ok) {
-            return Promise.reject(new Error(response.statusText))
+            return Promise.reject(new Error(response.statusText));
         }
-        return response.json()
+        return response.json();
     }
     protected handleHeadFetchResponse(response: Response) {
         if (!response.ok) {
-            return Promise.reject(new Error(response.statusText))
+            return Promise.reject(new Error(response.statusText));
         }
-        return Promise.resolve(response.headers)
+        return Promise.resolve(response.headers);
     }
 &nbsp;
     protected headOptions(): RequestInit {
-        return this.getRequestInit("HEAD")
+        return this.getRequestInit('HEAD');
     }
     protected getOptions(): RequestInit {
-        return this.getRequestInit("GET")
+        return this.getRequestInit('GET');
     }
     protected postOptions(item: T): RequestInit {
-        return this.getRequestInit("POST", JSON.stringify(item))
+        return this.getRequestInit('POST', JSON.stringify(item));
     }
     protected putOptions(item: T): RequestInit {
-        return this.getRequestInit("PUT", JSON.stringify(item))
+        return this.getRequestInit('PUT', JSON.stringify(item));
     }
     protected deleteOptions(): RequestInit {
-        return this.getRequestInit("DELETE")
+        return this.getRequestInit('DELETE');
     }
     protected getRequestInit(method: string, body?: string): RequestInit {
         return {
@@ -491,9 +491,9 @@ export abstract class FetchBase&lt;T extends Identifyable&gt;
             method,
             mode: this.requestMode,
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             }
-        }
+        };
     }
 }
 &nbsp;</pre></td></tr>
@@ -502,7 +502,7 @@ export abstract class FetchBase&lt;T extends Identifyable&gt;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Apr 19 2019 17:04:57 GMT-0700 (PDT)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Dec 06 2019 14:20:08 GMT-0600 (CST)
 </div>
 </div>
 <script src="prettify.js"></script>
